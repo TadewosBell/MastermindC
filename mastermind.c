@@ -1,4 +1,6 @@
-/* YOUR FILE-HEADER COMMENT HERE */
+/* Name: Tadewos Bellete
+   Email: bell6@umbc.edu
+ */
 
 /*
  * This file uses kernel-doc style comments, which is similar to
@@ -31,6 +33,7 @@
 
 /** true if user is in the middle of a game */
 static bool game_active;
+
 
 /** code that player is trying to guess */
 static int target_code[NUM_PEGS];
@@ -200,6 +203,23 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 	return -EPERM;
 }
 
+
+
+struct file_operations mm_fops = {
+  .read = mm_read,
+  .write = mm_write,
+  .mmap = mm_mmap,
+};
+
+
+
+static struct miscdevice mm_dev = {
+  .minor = MISC_DYNAMIC_MINOR,
+  .name = "mm",
+  .fops = &mm_fops,
+  .mode = 0666,
+};
+
 /**
  * mastermind_init() - entry point into the Mastermind kernel module
  * Return: 0 on successful initialization, negative on error
@@ -214,7 +234,7 @@ static int __init mastermind_init(void)
 	}
 
 	/* YOUR CODE HERE */
-
+	misc_register(&mm_dev);
 	return 0;
 }
 
@@ -227,6 +247,7 @@ static void __exit mastermind_exit(void)
 	vfree(user_view);
 
 	/* YOUR CODE HERE */
+	misc_deregister(&mm_dev);
 }
 
 module_init(mastermind_init);
