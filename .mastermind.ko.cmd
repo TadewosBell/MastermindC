@@ -1,0 +1,1 @@
+cmd_/home/tadewos/prj1/mastermind.ko := ld -r -m elf_x86_64  -z max-page-size=0x200000 -T ./scripts/module-common.lds  --build-id  -o /home/tadewos/prj1/mastermind.ko /home/tadewos/prj1/mastermind.o /home/tadewos/prj1/mastermind.mod.o ;  true
