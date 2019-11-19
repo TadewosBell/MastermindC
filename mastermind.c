@@ -199,8 +199,41 @@ static int mm_mmap(struct file *filp, struct vm_area_struct *vma)
 static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 			    size_t count, loff_t * ppos)
 {
-	/* FIXME */
-	return -EPERM;
+  /* FIXME */
+  char start[] = "start";
+  char quit[] = "quit";
+  char clearRes[] = "B-W-";
+  char targetBuf[8];
+  int copyLn = 8;
+
+  if(count < 8) copyLn = count;
+  
+  memcpy(targetBuf, ubuf, copyLn);
+  
+  
+  if(memcmp(targetBuf, start, copyLn) == 0){
+    //set the target code to 4211
+    target_code[0] = 4;
+    target_code[1] = 2;
+    target_code[2] = 1;
+    target_code[3] = 1;
+    //set number of guesses to 0
+    num_guesses = 0;
+
+    //set the user buffer to null
+    memset(user_view, 0, 4096);
+
+    game_active = true;
+
+    memcpy(last_result, clearRes, 4);
+    
+  }
+  else if(memcmp(targetBuf, quit, copyLn) == 0){
+    
+    game_active = false;
+  }
+  
+  return -EPERM;
 }
 
 
@@ -226,16 +259,24 @@ static struct miscdevice mm_dev = {
  */
 static int __init mastermind_init(void)
 {
-	pr_info("Initializing the game.\n");
-	user_view = vmalloc(PAGE_SIZE);
-	if (!user_view) {
-		pr_err("Could not allocate memory\n");
-		return -ENOMEM;
-	}
+  int retval;
+  pr_info("Initializing the game.\n");
+  user_view = vmalloc(PAGE_SIZE);
+  if (!user_view) {
+    pr_err("Could not allocate memory\n");
+    return -ENOMEM;
+  }
+  
+  /* YOUR CODE HERE */
+  retval = misc_register(&mm_dev);
+  if(retval < 0) goto failedRegister;
 
-	/* YOUR CODE HERE */
-	misc_register(&mm_dev);
-	return 0;
+  return 0;
+
+ failedRegister:
+  pr_err("Could not register micellanous device\n");
+  vfree(user_view);
+  return -1;
 }
 
 /**
