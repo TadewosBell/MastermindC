@@ -289,11 +289,20 @@ static int __init mastermind_init(void)
   retval = misc_register(&mm_dev);
   if(retval < 0) goto failedRegister;
 
+  retval = misc_register(&mm_ctl_dev);
+  if(retval < 0) goto failedSecondReg;
+
   return 0;
 
  failedRegister:
   pr_err("Could not register micellanous device\n");
   vfree(user_view);
+  return -1;
+
+ failedSecondReg:   
+  pr_err("Could not register ctl device");
+  vfree(user_view);
+  misc_deregister(&mm_dev);
   return -1;
 }
 
@@ -307,6 +316,7 @@ static void __exit mastermind_exit(void)
 
 	/* YOUR CODE HERE */
 	misc_deregister(&mm_dev);
+  misc_deregister(&mm_ctl_dev);
 }
 
 module_init(mastermind_init);
