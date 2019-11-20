@@ -114,7 +114,7 @@ static void mm_num_pegs(int target[], int guess[], unsigned *num_black,
 static ssize_t mm_read(struct file *filp, char __user * ubuf, size_t count,
 		       loff_t * ppos)
 {
-	/* FIXME */
+  /* FIXME */
   if(*ppos >= sizeof(last_result))
     return 0;
   if(*ppos + count > sizeof(last_result))
@@ -124,7 +124,7 @@ static ssize_t mm_read(struct file *filp, char __user * ubuf, size_t count,
   
   *ppos += count;
   
-	return count;
+  return count;
 }
 
 /**
