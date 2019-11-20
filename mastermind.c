@@ -254,14 +254,22 @@ struct file_operations mm_fops = {
   .mmap = mm_mmap,
 };
 
-
-
 static struct miscdevice mm_dev = {
   .minor = MISC_DYNAMIC_MINOR,
   .name = "mm",
   .fops = &mm_fops,
   .mode = 0666,
 };
+
+struct file_operations mm_ctl_fops = {
+  .write = mm_ctl_write,
+}
+
+static struct miscdevice mm_ctl_dev = {
+  .minor = MISC_DYNAMIC_MINOR,
+  .name = "mm_ctl",
+  .fops = &mm_ctl_fops,
+}
 
 /**
  * mastermind_init() - entry point into the Mastermind kernel module
