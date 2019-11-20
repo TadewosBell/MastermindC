@@ -237,13 +237,15 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 
     memcpy(last_result, clearRes, 4);
     
+    return 0;
   }
   else if(memcmp(targetBuf, quit, copyLn) == 0){
     
     game_active = false;
+    return 0;
   }
   
-  return -EPERM;
+  return -1;
 }
 
 
