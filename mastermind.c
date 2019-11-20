@@ -115,7 +115,16 @@ static ssize_t mm_read(struct file *filp, char __user * ubuf, size_t count,
 		       loff_t * ppos)
 {
 	/* FIXME */
-	return -EPERM;
+  if(*ppos >= sizeof(last_result))
+    return 0;
+  if(*ppos + count > sizeof(last_result))
+    count = sizeof(last_result) - *ppos;
+  if(copy_to_user(ubuf, last_result + *ppos, count) != 0)
+    return -EFAULT;
+  
+  *ppos += count;
+  
+	return count;
 }
 
 /**
