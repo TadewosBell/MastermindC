@@ -176,6 +176,7 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 	/* FIXME */
   unsigned right,rightVal;
   int retVal, i, j;
+  char blackPeg, whitePeg;
   char targetBuf[NUM_PEGS];
   int guess[NUM_PEGS];
 
@@ -207,8 +208,11 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 
   mm_num_pegs(target_code, guess, &right,&rightVal);
 
-  pr_info("number right: %u\n", right);
-  pr_info("number right value: %u\n", rightVal);
+  blackPeg = (char) right;
+  whitePeg = (char) rightVal;
+
+  pr_info("black Peg: %c\n", blackPeg);
+  pr_info("white Peg: %u\n", whitePeg);
 
 	return count;
 }
