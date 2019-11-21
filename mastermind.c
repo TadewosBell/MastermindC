@@ -119,19 +119,18 @@ static ssize_t mm_read(struct file *filp, char __user * ubuf, size_t count,
 
   if(game_active == false){
     memcpy(last_result,fourQ, sizeof(fourQ))
-      // pr_info("game inactive\n");
-      // if(copy_to_user(ubuf, fourQ, sizeof(fourQ)) != 0){
-      //   return -EFAULT;
-      // }
-      // return 0;
+    pr_info("game active is false\n");
   }
   if(*ppos >= sizeof(last_result)){
+    pr_info("ppos was greater\n");
     return 0;
   }
   if(*ppos + count > sizeof(last_result)){
+    pr_info("ppos + count was greater\n");
     count = sizeof(last_result) - *ppos;
   }
   if(copy_to_user(ubuf, last_result + *ppos, count) != 0){
+    pr_info("ppos + count was greater\n");
     return -EFAULT;
   }
   *ppos += count;
