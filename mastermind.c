@@ -213,7 +213,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 {
   /* FIXME */
   int retVal;
-  char start[] = {"s","t","a","r","t"};
+  char start[] = "start";
   char quit[] = "quit";
   char clearRes[] = "B-W-";
   char targetBuf[8];
