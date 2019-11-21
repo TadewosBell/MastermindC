@@ -235,7 +235,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 
     game_active = true;
 
-    copy_to_user((last_result, clearRes, 4);
+    copy_to_user(last_result, clearRes, 4);
     
     return 0;
   }
