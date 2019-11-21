@@ -227,6 +227,7 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 
 
   pr_info("result succesfully copied to last result array\n");
+  
 
   scnWrite += scnprintf(user_view + scnWrite, PAGE_SIZE - scnWrite, "Guess %d: %s | %s \n", num_guesses, targetBuf, last_result);
 
