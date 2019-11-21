@@ -234,7 +234,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   pr_info("compare value memcmp: %d\n", memcmp(targetBuf, start, sizeof(targetBuf)));
   pr_info("compare value strncmp: %d\n", strncmp(targetBuf, start, sizeof(targetBuf)));
   for(i = 0; i < sizeof(targetBuf); i++ ){
-    if(targetBuf[i] != start[i]){
+    if(*targetBuf[i] != *start[i]){
       isStart = false;
       pr_info("is not start");
     }
