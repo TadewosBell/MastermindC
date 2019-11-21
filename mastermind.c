@@ -48,6 +48,18 @@ static char last_result[4];
 /** buffer that records all of user's guesses and their results */
 static char *user_view;
 
+static int charToInt(char *buf){
+  int i,retVal;
+  retVal = -1;
+  char stringInt[] = {'0','1','2','3','4','5','6','7','8','9','0'}
+  for(i=0;i < 10; i++){
+    if(buf == stringInt[i]){
+      retVal = i;
+    }
+  }
+  return retVal;
+}
+
 /**
  * mm_num_pegs() - calculate number of black pegs and number of white pegs
  * @target: target code, up to NUM_PEGS elements
@@ -173,7 +185,7 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 
   for(i = 0; i < NUM_PEGS; i++){
     pr_info("input %d: %c\n",i, targetBuf[i]);
-    if(atoi(targetBuf[i]) == target_code[i]){
+    if(charToInt(targetBuf[i]) == target_code[i]){
       pr_info("they are equal\n");
     }
   }
