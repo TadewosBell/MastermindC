@@ -328,7 +328,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
     pr_info("memset done\n");
     game_active = true;
 
-    retVal = copy_to_user(last_result, clearRes, 4);
+    retVal = memcpy(last_result, clearRes, 4);
 
     pr_info("copy to user done\n");
     
