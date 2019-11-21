@@ -215,11 +215,6 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   int retVal;
   int i;
   char start[5];
-  start[0] = 's';
-  start[1] = 't';
-  start[2] = 'a';
-  start[3] = 'r';
-  start[4] = 't';
   bool isStart;
   isStart = true;
   char quit[] = "quit";
@@ -227,6 +222,12 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   char clearRes[] = "B-W-";
   char targetBuf[8];
   size_t copyLn = 8;
+
+  start[0] = 's';
+  start[1] = 't';
+  start[2] = 'a';
+  start[3] = 'r';
+  start[4] = 't';
   pr_info("mm_ctl_write all variables intialized and started\n");
   if(count < 8) copyLn = count;
   
