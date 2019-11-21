@@ -122,7 +122,7 @@ static ssize_t mm_read(struct file *filp, char __user * ubuf, size_t count,
       if(copy_to_user(ubuf, fourQ, sizeof(fourQ)) != 0){
         return -EFAULT;
       }
-      return sizeof(fourQ);
+      return 4;
   }
   else{
     if(*ppos >= sizeof(last_result)){
