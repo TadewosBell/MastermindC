@@ -212,6 +212,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 			    size_t count, loff_t * ppos)
 {
   /* FIXME */
+  int retVal;
   char start[] = "start";
   char quit[] = "quit";
   char clearRes[] = "B-W-";
@@ -220,9 +221,9 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   pr_info("mm_ctl_write all variables intialized and started\n");
   if(count < 8) copyLn = count;
   
-  copy_to_user(targetBuf,ubuf, copyLn);
+  retVal = copy_to_user(targetBuf,ubuf, copyLn);
   
-  if(memcmp(targetBuf, start, copyLn) == 0){
+  if(strncmp(targetBuf, start, copyLn) == 0){
     //set the target code to 4211
     target_code[0] = 4;
     target_code[1] = 2;
@@ -236,11 +237,11 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 
     game_active = true;
 
-    copy_to_user(last_result, clearRes, 4);
+    retVal = copy_to_user(last_result, clearRes, 4);
     
     return 0;
   }
-  else if(memcmp(targetBuf, quit, copyLn) == 0){
+  else if(strncmp(targetBuf, quit, copyLn) == 0){
     
     game_active = false;
     return 0;
