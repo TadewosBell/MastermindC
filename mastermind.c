@@ -43,7 +43,7 @@ static int target_code[NUM_PEGS];
 static unsigned num_guesses;
 
 /** result of most recent user guess */
-static char last_result[4];
+static char last_result[4] = {0};
 
 /** buffer that records all of user's guesses and their results */
 static char *user_view;
