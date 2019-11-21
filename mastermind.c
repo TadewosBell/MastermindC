@@ -43,7 +43,7 @@ static int target_code[NUM_PEGS];
 static unsigned num_guesses;
 
 /** result of most recent user guess */
-static char last_result[4] = {0};
+static char last_result[4];
 
 /** buffer that records all of user's guesses and their results */
 static char *user_view;
@@ -220,10 +220,8 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   pr_info("mm_ctl_write all variables intialized and started\n");
   if(count < 8) copyLn = count;
   
-  memcpy(targetBuf, ubuf, copyLn);
   
-  
-  if(memcmp(targetBuf, start, copyLn) == 0){
+  if(copy_to_user((targetBuf, start, copyLn) == 0){
     //set the target code to 4211
     target_code[0] = 4;
     target_code[1] = 2;
@@ -237,7 +235,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 
     game_active = true;
 
-    memcpy(last_result, clearRes, 4);
+    copy_to_user((last_result, clearRes, 4);
     
     return 0;
   }
