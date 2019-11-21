@@ -238,18 +238,19 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   for(i = 0; i < sizeof(targetBuf); i++ ){
     if(targetBuf[i] != start[i]){
       isStart = false;
-      pr_info("is not start");
+      pr_info("is not start\n");
     }
     else{
-      pr_info("is Start");
+      pr_info("is Start\n");
     }
   }
-  if(strncmp(targetBuf, start, sizeof(targetBuf)) == 1){
+  if(strncmp(targetBuf, start, sizeof(targetBuf)) == -1){
     //set the target code to 4211
     target_code[0] = 4;
     target_code[1] = 2;
     target_code[2] = 1;
     target_code[3] = 1;
+    pr_info("it was start\n");
     //set number of guesses to 0
     num_guesses = 0;
 
