@@ -115,13 +115,15 @@ static ssize_t mm_read(struct file *filp, char __user * ubuf, size_t count,
 		       loff_t * ppos)
 {
   /* FIXME */
-  if(*ppos >= sizeof(last_result))
+  if(*ppos >= sizeof(last_result)){
     return 0;
-  if(*ppos + count > sizeof(last_result))
+  }
+  if(*ppos + count > sizeof(last_result)){
     count = sizeof(last_result) - *ppos;
-  if(copy_to_user(ubuf, last_result + *ppos, count) != 0)
+  }
+  if(copy_to_user(ubuf, last_result + *ppos, count) != 0){
     return -EFAULT;
-  
+  }
   *ppos += count;
   
   return count;
@@ -215,7 +217,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   char clearRes[] = "B-W-";
   char targetBuf[8];
   int copyLn = 8;
-
+  pr_info("mm_ctl_write all variables intialized and started\n");
   if(count < 8) copyLn = count;
   
   memcpy(targetBuf, ubuf, copyLn);
