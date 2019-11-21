@@ -223,9 +223,9 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   char targetBuf[8];
   size_t copyLn = 8;
   pr_info("mm_ctl_write all variables intialized and started\n");
-  if(count < 8) copyLn = count;
+  if(count < sizeof(targetBuf)) copyLn = count;
   
-  retVal = copy_to_user(targetBuf,ubuf, copyLn);
+  retVal = memcpy(targetBuf,ubuf, copyLn);
   pr_info("copied command %s\n", targetBuf);
   pr_info("compare value memcmp: %d\n", memcmp(targetBuf, start, sizeof(targetBuf)));
   pr_info("compare value strncmp: %d\n", strncmp(targetBuf, start, count));
