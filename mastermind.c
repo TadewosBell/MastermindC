@@ -237,14 +237,14 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   pr_info("compare value strncmp: %d\n", strncmp(targetBuf, start, sizeof(targetBuf)));
   for(i = 0; i < sizeof(targetBuf); i++ ){
     if(targetBuf[i] != start[i]){
-      isStart = false;
+      //isStart = false;
       pr_info("is not start\n");
     }
     else{
       pr_info("is Start\n");
     }
   }
-  if(strncmp(targetBuf, start, sizeof(targetBuf)) > 0){
+  if(isStart){
     //set the target code to 4211
     target_code[0] = 4;
     target_code[1] = 2;
