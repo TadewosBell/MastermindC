@@ -217,7 +217,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   char quit[] = "quit";
   char clearRes[] = "B-W-";
   char targetBuf[8];
-  int copyLn = 8;
+  size_t copyLn = 8;
   pr_info("mm_ctl_write all variables intialized and started\n");
   if(count < 8) copyLn = count;
   
