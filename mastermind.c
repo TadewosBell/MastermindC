@@ -220,7 +220,8 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   start[2] = 'a';
   start[3] = 'r';
   start[4] = 't';
-  bool isStart = true;
+  bool isStart;
+  isStart = true;
   char quit[] = "quit";
   bool isQuit = true;
   char clearRes[] = "B-W-";
@@ -242,7 +243,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
       pr_info("is Start");
     }
   }
-  if(strncmp(targetBuf, start, sizeof(targetBuf)) == -1){
+  if(strncmp(targetBuf, start, sizeof(targetBuf)) == 1){
     //set the target code to 4211
     target_code[0] = 4;
     target_code[1] = 2;
