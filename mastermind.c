@@ -162,6 +162,19 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 			size_t count, loff_t * ppos)
 {
 	/* FIXME */
+  int right,rightVal, retVal, i;
+  char targetBuf[NUM_PEGS];
+
+  if(game_active == false || count < NUM_PEGS){
+    return -EINVAL;
+  }
+
+  retVal = memcpy(targetBuf,ubuf, NUM_PEGS);
+
+  for(i = 0; i < NUM_PEGS; i++){
+    pr_info("input %d: %s\n", targetBuf[i]);
+  }
+
 	return -EPERM;
 }
 
@@ -238,7 +251,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   pr_info("copied command %s\n", targetBuf);
   pr_info("compare value memcmp: %d\n", memcmp(targetBuf, start, sizeof(targetBuf)));
   pr_info("compare value strncmp: %d\n", strncmp(targetBuf, start, count));
-  for(i = 0; i < sizeof(targetBuf); i++ ){
+  for(i = 0; i < sizeof(ubuf); i++ ){
     if(targetBuf[i] != start[i]){
       //isStart = false;
       pr_info("is not start\n");
