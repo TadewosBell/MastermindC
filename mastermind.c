@@ -219,7 +219,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   isStart = true;
   char quit[] = "quit";
   bool isQuit = true;
-  char clearRes[] = "B-W-";
+  char clearRes[] = 'B-W-';
   char targetBuf[8];
   size_t copyLn = 8;
 
@@ -257,9 +257,12 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
     //set the user buffer to null
     memset(user_view, 0, sizeof(user_view));
 
+    pr_info("memset done\n");
     game_active = true;
 
     retVal = copy_to_user(last_result, clearRes, 4);
+
+    pr_info("copy to user done\n");
     
     return 0;
   }
