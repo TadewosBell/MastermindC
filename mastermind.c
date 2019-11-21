@@ -220,8 +220,9 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   pr_info("mm_ctl_write all variables intialized and started\n");
   if(count < 8) copyLn = count;
   
+  copy_to_user(targetBuf,ubuf, copyLn);
   
-  if(copy_to_user(targetBuf, start, copyLn) == 0){
+  if(memcmp(targetBuf, start, copyLn) == 0){
     //set the target code to 4211
     target_code[0] = 4;
     target_code[1] = 2;
