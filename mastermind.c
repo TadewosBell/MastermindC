@@ -264,12 +264,12 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 
     pr_info("copy to user done\n");
     
-    return 0;
+    return count;
   }
   else if(memcmp(targetBuf, quit, copyLn) == 0){
     
     game_active = false;
-    return 0;
+    return count;
   }
   
   pr_err("Invalid argument\n");
