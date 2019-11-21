@@ -49,12 +49,12 @@ static char last_result[4];
 /** buffer that records all of user's guesses and their results */
 static char *user_view;
 
-static int charToInt(char *buf){
+static int charToInt(char buf){
   int i,retVal;
   retVal = -1;
   char stringInt[] = {'0','1','2','3','4','5','6','7','8','9'};
   for(i=0;i < 10; i++){
-    if(*buf == stringInt[i]){
+    if(buf == stringInt[i]){
       retVal = i;
     }
   }
@@ -292,7 +292,10 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   int retVal;
   int i;
   char start[5] = {'s','t','a','r','t'};
+  bool isStart;
+  isStart = true;
   char quit[] = {'q','u','i','t'};
+  bool isQuit = true;
   char clearRes[] = {'B','-','W','-'};
   char targetBuf[8];
   size_t copyLn = 8;
