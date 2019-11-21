@@ -221,8 +221,9 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
   pr_info("black Peg: %c\n", blackPeg);
   pr_info("white Peg: %c\n", whitePeg);
 
-  retVal = copy_to_user(last_result[1], blackPeg, 1);
-  retVal = copy_to_user(last_result[3], whitePeg, 1);
+  last_result[1] = blackPeg;
+  last_result[3] = whitePeg;
+
 
   pr_info("result succesfully copied to last result array\n");
 
