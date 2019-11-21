@@ -208,11 +208,11 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 
   mm_num_pegs(target_code, guess, &right,&rightVal);
 
-  blackPeg = (char) right;
-  whitePeg = (char) rightVal;
+  blackPeg = right + '0';
+  whitePeg = rightVal + '0';
 
   pr_info("black Peg: %c\n", blackPeg);
-  pr_info("white Peg: %u\n", whitePeg);
+  pr_info("white Peg: %c\n", whitePeg);
 
 	return count;
 }
