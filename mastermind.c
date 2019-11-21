@@ -222,7 +222,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   if(count < 8) copyLn = count;
   
   retVal = copy_to_user(targetBuf,ubuf, copyLn);
-  
+  pr_info("copied command %s\n", targetBuf);
   if(strncmp(targetBuf, start, copyLn) == 0){
     //set the target code to 4211
     target_code[0] = 4;
