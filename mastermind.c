@@ -214,7 +214,9 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   /* FIXME */
   int retVal;
   char start[] = "start";
+  bool isStart = true;
   char quit[] = "quit";
+  bool isQuit = true;
   char clearRes[] = "B-W-";
   char targetBuf[8];
   size_t copyLn = 8;
@@ -226,7 +228,14 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   pr_info("compare value memcmp: %d\n", memcmp(targetBuf, start, sizeof(targetBuf)));
 
   for(size_t i = 0; i < sizeof(targetBuf); i++ ){
-    pr_info("compare value strncmp: %d\n", strncmp(targetBuf[i], start[i], sizeof(targetBuf[i])));
+    //pr_info("compare value strncmp: %d\n", strncmp(targetBuf[i], start[i], sizeof(targetBuf[i])));
+    if(targetBuf[i] != start[i]){
+      isStart = false;
+      pr_info("is not start");
+    }
+    else{
+      pr_info("is Start");
+    }
   }
   if(memcmp(targetBuf, start, copyLn) == 0){
     //set the target code to 4211
