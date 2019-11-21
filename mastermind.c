@@ -292,10 +292,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   int retVal;
   int i;
   char start[5] = {'s','t','a','r','t'};
-  bool isStart;
-  isStart = true;
   char quit[] = {'q','u','i','t'};
-  bool isQuit = true;
   char clearRes[] = {'B','-','W','-'};
   char targetBuf[8];
   size_t copyLn = 8;
@@ -306,15 +303,8 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   pr_info("copied command %s\n", targetBuf);
   pr_info("compare value memcmp: %d\n", memcmp(targetBuf, start, sizeof(targetBuf)));
   pr_info("compare value strncmp: %d\n", strncmp(targetBuf, start, count));
-  for(i = 0; i < sizeof(ubuf); i++ ){
-    if(targetBuf[i] != start[i]){
-      //isStart = false;
-      pr_info("is not start\n");
-    }
-    else{
-      pr_info("is Start\n");
-    }
-  }
+
+  
   if(strncmp(targetBuf, start, count) == 0){
     //set the target code to 4211
     target_code[0] = 4;
