@@ -54,7 +54,7 @@ static int charToInt(char *buf){
   retVal = -1;
   char stringInt[] = {'0','1','2','3','4','5','6','7','8','9'};
   for(i=0;i < 10; i++){
-    if(buf == stringInt[i]){
+    if*(buf == stringInt[i]){
       retVal = i;
     }
   }
@@ -304,7 +304,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   pr_info("compare value memcmp: %d\n", memcmp(targetBuf, start, sizeof(targetBuf)));
   pr_info("compare value strncmp: %d\n", strncmp(targetBuf, start, count));
 
-  
+
   if(strncmp(targetBuf, start, count) == 0){
     //set the target code to 4211
     target_code[0] = 4;
