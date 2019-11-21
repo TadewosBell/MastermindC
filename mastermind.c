@@ -115,6 +115,13 @@ static ssize_t mm_read(struct file *filp, char __user * ubuf, size_t count,
 		       loff_t * ppos)
 {
   /* FIXME */
+  char fourQ[] = {'?','?','?','?'};
+
+  if(game_active == false){
+      if(copy_to_user(ubuf, last_result + *ppos, count) != 0){
+        return -EFAULT;
+      }
+  }
   if(*ppos >= sizeof(last_result)){
     return 0;
   }
