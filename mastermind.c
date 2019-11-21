@@ -174,7 +174,7 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 			size_t count, loff_t * ppos)
 {
 	/* FIXME */
-  unsigned *right,*rightVal;
+  unsigned right,rightVal;
   int retVal, i, j;
   char targetBuf[NUM_PEGS];
   int guess[NUM_PEGS];
