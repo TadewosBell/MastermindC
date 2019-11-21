@@ -189,7 +189,7 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
   num_guesses = num_guesses + 1;
 
   //copy entry to buffer
-  retVal = memcpy(targetBuf,ubuf, NUM_PEGS);
+  memcpy(targetBuf,ubuf, NUM_PEGS);
 
   //debug code
   for(i = 0; i < NUM_PEGS; i++){
@@ -302,7 +302,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   pr_info("mm_ctl_write all variables intialized and started\n");
   if(count < sizeof(targetBuf)) copyLn = count;
   
-  retVal = memcpy(targetBuf,ubuf, copyLn);
+  memcpy(targetBuf,ubuf, copyLn);
   pr_info("copied command %s\n", targetBuf);
   pr_info("compare value memcmp: %d\n", memcmp(targetBuf, start, sizeof(targetBuf)));
   pr_info("compare value strncmp: %d\n", strncmp(targetBuf, start, count));
@@ -335,7 +335,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
     pr_info("memset done\n");
     game_active = true;
 
-    retVal = memcpy(last_result, clearRes, 4);
+    memcpy(last_result, clearRes, 4);
 
     pr_info("copy to user done\n");
     
