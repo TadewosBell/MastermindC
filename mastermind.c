@@ -118,7 +118,7 @@ static ssize_t mm_read(struct file *filp, char __user * ubuf, size_t count,
   char fourQ[] = {'?','?','?','?'};
 
   if(game_active == false){
-      if(copy_to_user(ubuf, last_result + *ppos, count) != 0){
+      if(copy_to_user(ubuf, fourQ + *ppos, count) != 0){
         return -EFAULT;
       }
   }
