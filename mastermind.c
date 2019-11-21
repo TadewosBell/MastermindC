@@ -174,12 +174,15 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 			size_t count, loff_t * ppos)
 {
 	/* FIXME */
-  int right,rightVal, retVal, i;
+  unsigned *right,*rightVal;
+  int retVal, i, j;
   char targetBuf[NUM_PEGS];
+  int guess[NUM_PEGS];
 
   if(game_active == false || count < NUM_PEGS){
     return -EINVAL;
   }
+  num_guesses = num_guesses + 1;
 
   retVal = memcpy(targetBuf,ubuf, NUM_PEGS);
 
@@ -188,8 +191,21 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
     if(charToInt(targetBuf[i]) == target_code[i]){
       pr_info("they are equal\n");
     }
+    for(j = 0; j < NUM_PEGS; j++){
+      if(charToInt(targetBuf[i]) == target_code[i]){
+        pr_info("right value\n");
+      }
+    }
   }
 
+  for(i = 0; i < NUM_PEGS; i++){
+    guess[i] = charToInt(targetBuf);
+  }
+  mm_num_pegs(target_code, guess, &right, &rightVal);
+
+  pr_info('number right: %d\n', *right);
+  pr_info('number right value: %d\n', *rightVal);
+  
 	return -EPERM;
 }
 
