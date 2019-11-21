@@ -199,7 +199,7 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
   }
 
   for(i = 0; i < NUM_PEGS; i++){
-    guess[i] = charToInt(targetBuf);
+    guess[i] = charToInt(targetBuf[i]);
   }
   for(i=0; i < NUM_PEGS; i++){
     pr_info("guess %d: %d\n",i,guess[i]);
