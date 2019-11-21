@@ -221,7 +221,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   if(count < 8) copyLn = count;
   
   
-  if(copy_to_user((targetBuf, start, copyLn) == 0){
+  if(copy_to_user(targetBuf, start, copyLn) == 0){
     //set the target code to 4211
     target_code[0] = 4;
     target_code[1] = 2;
