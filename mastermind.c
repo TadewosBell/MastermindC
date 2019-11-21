@@ -172,7 +172,7 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
   retVal = memcpy(targetBuf,ubuf, NUM_PEGS);
 
   for(i = 0; i < NUM_PEGS; i++){
-    pr_info("input %d: %s\n", targetBuf[i]);
+    pr_info("input %d: %s\n",i, targetBuf[i]);
   }
 
 	return -EPERM;
