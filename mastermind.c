@@ -173,6 +173,9 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 
   for(i = 0; i < NUM_PEGS; i++){
     pr_info("input %d: %c\n",i, targetBuf[i]);
+    if(atoi(targetBuf[i]) == target_code[i]){
+      pr_info("they are equal\n");
+    }
   }
 
 	return -EPERM;
