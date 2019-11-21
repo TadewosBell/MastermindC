@@ -274,6 +274,7 @@ static struct miscdevice mm_ctl_dev = {
   .minor = MISC_DYNAMIC_MINOR,
   .name = "mm_ctl",
   .fops = &mm_ctl_fops,
+  .mode = 0666,
 };
 
 /**
