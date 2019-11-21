@@ -118,7 +118,7 @@ static ssize_t mm_read(struct file *filp, char __user * ubuf, size_t count,
   char fourQ[] = {'?','?','?','?'};
 
   if(game_active == false){
-    memcpy(last_result,fourQ, sizeof(fourQ))
+    memcpy(last_result,fourQ, sizeof(fourQ));
     pr_info("game active is false\n");
   }
   if(*ppos >= sizeof(last_result)){
