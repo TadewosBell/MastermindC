@@ -213,7 +213,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 {
   /* FIXME */
   int retVal;
-  char start[] = "start";
+  char start[] = {"s","t","a","r","t"};
   char quit[] = "quit";
   char clearRes[] = "B-W-";
   char targetBuf[8];
@@ -223,6 +223,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   
   retVal = copy_to_user(targetBuf,ubuf, copyLn);
   pr_info("copied command %s\n", targetBuf);
+  pr_info("compare value %d\n", memcmp(targetBuf, start, copyLn));
   if(memcmp(targetBuf, start, copyLn) == 0){
     //set the target code to 4211
     target_code[0] = 4;
