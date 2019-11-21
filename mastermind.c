@@ -213,6 +213,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 {
   /* FIXME */
   int retVal;
+  int i;
   char start[] = "start";
   bool isStart = true;
   char quit[] = "quit";
@@ -227,7 +228,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   pr_info("copied command %s\n", targetBuf);
   pr_info("compare value memcmp: %d\n", memcmp(targetBuf, start, sizeof(targetBuf)));
 
-  for(size_t i = 0; i < sizeof(targetBuf); i++ ){
+  for(i = 0; i < sizeof(targetBuf); i++ ){
     //pr_info("compare value strncmp: %d\n", strncmp(targetBuf[i], start[i], sizeof(targetBuf[i])));
     if(targetBuf[i] != start[i]){
       isStart = false;
