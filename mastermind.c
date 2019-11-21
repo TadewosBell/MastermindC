@@ -118,10 +118,11 @@ static ssize_t mm_read(struct file *filp, char __user * ubuf, size_t count,
   char fourQ[] = {'?','?','?','?'};
 
   if(game_active == false){
-    pr_info("game inactive\n");
+      pr_info("game inactive\n");
       if(copy_to_user(ubuf, fourQ, sizeof(fourQ)) != 0){
         return -EFAULT;
       }
+      return sizeof(fourQ);
   }
   else{
     if(*ppos >= sizeof(last_result)){
