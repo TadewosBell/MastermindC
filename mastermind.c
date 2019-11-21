@@ -296,8 +296,8 @@ static int __init mastermind_init(void)
 
   retval = misc_register(&mm_ctl_dev);
   if(retval < 0) goto failedSecondReg;
-  
-  pr_info("Successfully registered devices");
+
+  pr_info("Successfully registered devices\n");
   return 0;
 
  failedRegister:
