@@ -224,7 +224,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   retVal = copy_to_user(targetBuf,ubuf, copyLn);
   pr_info("copied command %s\n", targetBuf);
   pr_info("compare value memcmp: %d\n", memcmp(targetBuf, start, sizeof(targetBuf)));
-  pr_info("compare value strncmp: %d\n", strncmp(tragetBuf, start, sizeof(targetBuf)));
+  pr_info("compare value strncmp: %d\n", strncmp(targetBuf, start, sizeof(targetBuf)));
   if(memcmp(targetBuf, start, copyLn) == 0){
     //set the target code to 4211
     target_code[0] = 4;
