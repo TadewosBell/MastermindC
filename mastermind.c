@@ -35,7 +35,9 @@
 /** true if user is in the middle of a game */
 static bool game_active;
 
+size_t scnWrite;
 
+scnWrite = 0;
 /** code that player is trying to guess */
 static int target_code[NUM_PEGS];
 
@@ -227,6 +229,8 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 
   pr_info("result succesfully copied to last result array\n");
 
+  scnWrite += scnprintf(user_view + scnWrite, PAGE_SIZE - scnWrite, "Guess %d: %s | %s \n", num_guesses, targetBuf, last_result);
+
 	return count;
 }
 
@@ -319,7 +323,11 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
     target_code[2] = 1;
     target_code[3] = 1;
     pr_info("it was start\n");
+
+    scnWrite = 0;
+
     //set number of guesses to 0
+
     num_guesses = 0;
 
     //set the user buffer to null
