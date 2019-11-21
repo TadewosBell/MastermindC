@@ -215,11 +215,11 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   int retVal;
   int i;
   char start[5];
-  start[0] = "s";
-  start[1] = "t";
-  start[2] = "a";
-  start[3] = "r";
-  start[4] = "t";
+  start[0] = 's';
+  start[1] = 't';
+  start[2] = 'a';
+  start[3] = 'r';
+  start[4] = 't';
   bool isStart = true;
   char quit[] = "quit";
   bool isQuit = true;
