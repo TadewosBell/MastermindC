@@ -260,7 +260,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
     
     return count;
   }
-  else if(strncmp(targetBuf, start, count) == 0){
+  else if(strncmp(targetBuf, quit, count) == 0){
     pr_info("in quit if\n");
     game_active = false;
     return count;
