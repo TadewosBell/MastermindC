@@ -183,10 +183,14 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
   if(game_active == false || count < NUM_PEGS){
     return -EINVAL;
   }
+
+  //increment the number of guesses made if entry is valid
   num_guesses = num_guesses + 1;
 
+  //copy entry to buffer
   retVal = memcpy(targetBuf,ubuf, NUM_PEGS);
 
+  //debug code
   for(i = 0; i < NUM_PEGS; i++){
     pr_info("input %d: %c\n",i, targetBuf[i]);
     if(charToInt(targetBuf[i]) == target_code[i]){
@@ -199,6 +203,7 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
     }
   }
 
+  //convert guess characters to int and store in an array
   for(i = 0; i < NUM_PEGS; i++){
     guess[i] = charToInt(targetBuf[i]);
   }
@@ -206,13 +211,20 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
     pr_info("guess %d: %d\n",i,guess[i]);
   }
 
+  //get number of black and white pegs
   mm_num_pegs(target_code, guess, &right,&rightVal);
 
+  //convert b and w values to string then store
   blackPeg = right + '0';
   whitePeg = rightVal + '0';
 
   pr_info("black Peg: %c\n", blackPeg);
   pr_info("white Peg: %c\n", whitePeg);
+
+  retVal = copy_to_user(last_result[1], blackPeg, 1);
+  retVal = copy_to_user(last_result[3], whitePeg, 1);
+
+  pr_info("result succesfully copied to last result array\n");
 
 	return count;
 }
