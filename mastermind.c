@@ -219,7 +219,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   isStart = true;
   char quit[] = "quit";
   bool isQuit = true;
-  char clearRes[] = 'B-W-';
+  char clearRes[] = {'B','-','W','-'};
   char targetBuf[8];
   size_t copyLn = 8;
 
