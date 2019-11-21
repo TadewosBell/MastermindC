@@ -214,20 +214,14 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   /* FIXME */
   int retVal;
   int i;
-  char start[5];
+  char start[5] = {'s','t','a','r','t'};
   bool isStart;
   isStart = true;
-  char quit[] = "quit";
+  char quit[] = {'q','u','i','t'};
   bool isQuit = true;
   char clearRes[] = {'B','-','W','-'};
   char targetBuf[8];
   size_t copyLn = 8;
-
-  start[0] = 's';
-  start[1] = 't';
-  start[2] = 'a';
-  start[3] = 'r';
-  start[4] = 't';
   pr_info("mm_ctl_write all variables intialized and started\n");
   if(count < 8) copyLn = count;
   
