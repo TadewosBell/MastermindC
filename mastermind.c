@@ -118,24 +118,24 @@ static ssize_t mm_read(struct file *filp, char __user * ubuf, size_t count,
   char fourQ[] = {'?','?','?','?'};
 
   if(game_active == false){
-      pr_info("game inactive\n");
-      if(copy_to_user(ubuf, fourQ, sizeof(fourQ)) != 0){
-        return -EFAULT;
-      }
-      return 0;
+    memcpy(last_result,fourQ, sizeof(fourQ))
+      // pr_info("game inactive\n");
+      // if(copy_to_user(ubuf, fourQ, sizeof(fourQ)) != 0){
+      //   return -EFAULT;
+      // }
+      // return 0;
   }
-  else{
-    if(*ppos >= sizeof(last_result)){
-      return 0;
-    }
-    if(*ppos + count > sizeof(last_result)){
-      count = sizeof(last_result) - *ppos;
-    }
-    if(copy_to_user(ubuf, last_result + *ppos, count) != 0){
-      return -EFAULT;
-    }
-    *ppos += count;
+  if(*ppos >= sizeof(last_result)){
+    return 0;
   }
+  if(*ppos + count > sizeof(last_result)){
+    count = sizeof(last_result) - *ppos;
+  }
+  if(copy_to_user(ubuf, last_result + *ppos, count) != 0){
+    return -EFAULT;
+  }
+  *ppos += count;
+  
   return count;
 }
 
