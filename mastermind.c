@@ -203,10 +203,10 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
   }
   mm_num_pegs(target_code, guess, &right,&rightVal);
 
-  pr_info("number right: %d\n", right);
-  pr_info("number right value: %d\n", rightVal);
+  pr_info("number right: %u\n", right);
+  pr_info("number right value: %u\n", rightVal);
 
-	return -EPERM;
+	return count;
 }
 
 /**
