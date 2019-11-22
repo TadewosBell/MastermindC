@@ -77,8 +77,8 @@ int main(void) {
 	printf("Test5: check if correct output is saved userview when guess\n");
 	retVal = write(fileDesc, "start", 5);
 	retVal = write(mmDesc, "1234",4);
-	char expString[] = "Guess 1: 1234 | B1W2";
-	int strCmpVal = strcmp(expString,(char *)dest,20);
+	char expString[] = "Guess 1: 1234 | B1W2 \n";
+	int strCmpVal = strcmp(expString,(char *)dest);
 
 	printf("String comp %d\n", strCmpVal);
 	printf("string history %s\n", (char *)dest);
