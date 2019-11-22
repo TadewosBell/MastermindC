@@ -46,6 +46,10 @@ int main(void) {
 	printf("retVal %d\n", retVal);
 	printf("errno %d\n", errno);
 
+	if(retVal == 22){
+		printf("Correct value returned");
+	}
+
 	retVal = read(fileDesc, readBuf, 18);
 
 	printf("read result %s\n", readBuf);
