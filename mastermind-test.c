@@ -12,7 +12,7 @@
 int main(void) {
 	printf("Hello, world!\n");
 
-	int retval;
+	int fileDesc;
 
 	fileDesc = open('/dev/mm_ctl', O_RDWR);
 	if(retval < 0){
