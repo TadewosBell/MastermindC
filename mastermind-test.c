@@ -14,7 +14,7 @@ int main(void) {
 
 	int fileDesc;
 
-	fileDesc = open('/dev/mm_ctl', O_RDWR);
+	fileDesc = open("/dev/mm_ctl", O_RDWR);
 	if(fileDesc < 0){
 		printf("didnt open\n");
 		return 0;
