@@ -81,7 +81,7 @@ int main(void) {
 	int strCmpVal = strcmp(expString,(char *)dest,20);
 
 	printf("String comp %d\n", strCmpVal);
-	printf("string history %s\n", (char *)dest)
+	printf("string history %s\n", (char *)dest);
 
 	close(fileDesc);
 	close(mmDesc);
