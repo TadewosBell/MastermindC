@@ -30,9 +30,9 @@ __attribute__((section("__versions"))) = {
 	{ 0x999e8297, "vfree" },
 	{ 0x842cfd4e, "misc_register" },
 	{ 0xd6ee688f, "vmalloc" },
-	{ 0xdecd0b29, "__stack_chk_fail" },
+	{ 0x96848186, "scnprintf" },
 	{ 0x5a921311, "strncmp" },
-	{ 0x449ad0a7, "memcmp" },
+	{ 0xdecd0b29, "__stack_chk_fail" },
 	{ 0xc5850110, "printk" },
 	{ 0xb44ad4b3, "_copy_to_user" },
 	{ 0x65948cb8, "remap_pfn_range" },
@@ -45,4 +45,4 @@ __attribute__((section(".modinfo"))) =
 "depends=";
 
 
-MODULE_INFO(srcversion, "EC43622964FA12CE744A73D");
+MODULE_INFO(srcversion, "BFDBA6CAAA3C11AD45A34C6");

@@ -61,18 +61,17 @@ static char *user_view;
 * buf: characture to convert to int
 * out puts correct int for char and -1 when invalid
 */
-static int charToInt(char buf)
-{
-	int i, retVal;
-	char stringInt[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+static int charToInt(char buf){
+  int i,retVal;
+  char stringInt[] = {'0','1','2','3','4','5','6','7','8','9'};
 
-	retVal = -1;
-	for (i = 0; i < 10; i++) {
-		if (buf == stringInt[i]) {
-			retVal = i;
-		}
-	}
-	return retVal;
+  retVal = -1;
+  for(i=0;i < 10; i++){
+    if(buf == stringInt[i]){
+      retVal = i;
+    }
+  }
+  return retVal;
 }
 
 /**
@@ -141,28 +140,28 @@ static void mm_num_pegs(int target[], int guess[], unsigned *num_black,
 static ssize_t mm_read(struct file *filp, char __user * ubuf, size_t count,
 		       loff_t * ppos)
 {
-	/* FIXME */
-	char fourQ[] = { '?', '?', '?', '?' };
+  /* FIXME */
+  char fourQ[] = {'?','?','?','?'};
 
-	if (game_active == false) {
-		memcpy(last_result, fourQ, sizeof(fourQ));
-		pr_info("game active is false\n");
-	}
-	if (*ppos >= sizeof(last_result)) {
-		pr_info("ppos was greater\n");
-		return 0;
-	}
-	if (*ppos + count > sizeof(last_result)) {
-		pr_info("ppos + count was greater\n");
-		count = sizeof(last_result) - *ppos;
-	}
-	if (copy_to_user(ubuf, last_result + *ppos, count) != 0) {
-		pr_info("ppos + count was greater\n");
-		return -EFAULT;
-	}
-	*ppos += count;
-
-	return count;
+  if(game_active == false){
+    memcpy(last_result,fourQ, sizeof(fourQ));
+    pr_info("game active is false\n");
+  }
+  if(*ppos >= sizeof(last_result)){
+    pr_info("ppos was greater\n");
+    return 0;
+  }
+  if(*ppos + count > sizeof(last_result)){
+    pr_info("ppos + count was greater\n");
+    count = sizeof(last_result) - *ppos;
+  }
+  if(copy_to_user(ubuf, last_result + *ppos, count) != 0){
+    pr_info("ppos + count was greater\n");
+    return -EFAULT;
+  }
+  *ppos += count;
+  
+  return count;
 }
 
 /**
@@ -189,68 +188,64 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 			size_t count, loff_t * ppos)
 {
 	/* FIXME */
-	unsigned right, rightVal;
-	int i, j;
-	char blackPeg, whitePeg;
-	char targetBuf[NUM_PEGS];
-	int guess[NUM_PEGS];
+  unsigned right,rightVal;
+  int i, j;
+  char blackPeg, whitePeg;
+  char targetBuf[NUM_PEGS];
+  int guess[NUM_PEGS];
 
-	if (game_active == false || count < NUM_PEGS) {
-		return -EINVAL;
-	}
-	//increment the number of guesses made if entry is valid
-	num_guesses = num_guesses + 1;
+  if(game_active == false || count < NUM_PEGS){
+    return -EINVAL;
+  }
 
-	//copy entry to buffer
-	memcpy(targetBuf, ubuf, NUM_PEGS);
+  //increment the number of guesses made if entry is valid
+  num_guesses = num_guesses + 1;
 
-	//debug code
-	for (i = 0; i < NUM_PEGS; i++) {
-		pr_info("input %d: %c\n", i, targetBuf[i]);
-		if (charToInt(targetBuf[i]) == target_code[i]) {
-			pr_info("they are equal\n");
-		}
-		for (j = 0; j < NUM_PEGS; j++) {
-			if (charToInt(targetBuf[i]) == target_code[i]) {
-				pr_info("right value\n");
-			}
-		}
-	}
+  //copy entry to buffer
+  memcpy(targetBuf,ubuf, NUM_PEGS);
 
-	//convert guess characters to int and store in an array
-	for (i = 0; i < NUM_PEGS; i++) {
-		if (charToInt(targetBuf[i]) == -1) {
-			return -EINVAL;
-		}
-		guess[i] = charToInt(targetBuf[i]);
-	}
-	for (i = 0; i < NUM_PEGS; i++) {
-		pr_info("guess %d: %d\n", i, guess[i]);
-	}
+  //debug code
+  for(i = 0; i < NUM_PEGS; i++){
+    pr_info("input %d: %c\n",i, targetBuf[i]);
+    if(charToInt(targetBuf[i]) == target_code[i]){
+      pr_info("they are equal\n");
+    }
+    for(j = 0; j < NUM_PEGS; j++){
+      if(charToInt(targetBuf[i]) == target_code[i]){
+        pr_info("right value\n");
+      }
+    }
+  }
 
-	//get number of black and white pegs
-	mm_num_pegs(target_code, guess, &right, &rightVal);
+  //convert guess characters to int and store in an array
+  for(i = 0; i < NUM_PEGS; i++){
+    if(charToInt(targetBuf[i]) == -1){
+      return -EINVAL;
+    }
+    guess[i] = charToInt(targetBuf[i]);
+  }
+  for(i=0; i < NUM_PEGS; i++){
+    pr_info("guess %d: %d\n",i,guess[i]);
+  }
 
-	//convert b and w values to string then store
-	blackPeg = right + '0';
-	whitePeg = rightVal + '0';
+  //get number of black and white pegs
+  mm_num_pegs(target_code, guess, &right,&rightVal);
 
-	pr_info("black Peg: %c\n", blackPeg);
-	pr_info("white Peg: %c\n", whitePeg);
+  //convert b and w values to string then store
+  blackPeg = right + '0';
+  whitePeg = rightVal + '0';
 
-	last_result[1] = blackPeg;
-	last_result[3] = whitePeg;
+  pr_info("black Peg: %c\n", blackPeg);
+  pr_info("white Peg: %c\n", whitePeg);
 
-	pr_info("result succesfully copied to last result array\n");
+  last_result[1] = blackPeg;
+  last_result[3] = whitePeg;
 
-	scnWrite +=
-	    scnprintf(user_view + scnWrite, PAGE_SIZE - scnWrite,
-		      "Guess %d: %c%c%c%c | %c%c%c%c \n", num_guesses,
-		      targetBuf[0], targetBuf[1], targetBuf[2], targetBuf[3],
-		      last_result[0], last_result[1], last_result[2],
-		      last_result[3]);
+  pr_info("result succesfully copied to last result array\n");
 
-	pr_info("history %s", user_view);
+  scnWrite += scnprintf(user_view + scnWrite, PAGE_SIZE - scnWrite, "Guess %d: %c%c%c%c | %c%c%c%c \n", num_guesses, targetBuf[0],targetBuf[1],targetBuf[2],targetBuf[3], last_result[0],last_result[1],last_result[2],last_result[3]);
+
+  pr_info("history %s", user_view);
 
 	return count;
 }
@@ -310,82 +305,83 @@ static int mm_mmap(struct file *filp, struct vm_area_struct *vma)
 static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 			    size_t count, loff_t * ppos)
 {
-	char start[5] = { 's', 't', 'a', 'r', 't' };
-	char quit[] = { 'q', 'u', 'i', 't' };
-	char clearRes[] = { 'B', '-', 'W', '-' };
-	char targetBuf[8];
-	size_t copyLn = 8;
-	pr_info("mm_ctl_write all variables intialized and started\n");
-	if (count < sizeof(targetBuf))
-		copyLn = count;
+  char start[5] = {'s','t','a','r','t'};
+  char quit[] = {'q','u','i','t'};
+  char clearRes[] = {'B','-','W','-'};
+  char targetBuf[8];
+  size_t copyLn = 8;
+  pr_info("mm_ctl_write all variables intialized and started\n");
+  if(count < sizeof(targetBuf)) copyLn = count;
+  
+  memcpy(targetBuf,ubuf, copyLn);
+  pr_info("copied command %s\n", targetBuf);
+  //pr_info("compare value memcmp: %d\n", memcmp(targetBuf, start, sizeof(targetBuf)));
+  pr_info("compare value strncmp: %d\n", strncmp(targetBuf, start, count));
 
-	memcpy(targetBuf, ubuf, copyLn);
-	pr_info("copied command %s\n", targetBuf);
-	//pr_info("compare value memcmp: %d\n", memcmp(targetBuf, start, sizeof(targetBuf)));
-	pr_info("compare value strncmp: %d\n",
-		strncmp(targetBuf, start, count));
+  if(strncmp(targetBuf, start, count) == 0){
+    //set the target code to 4211
+    target_code[0] = 4;
+    target_code[1] = 2;
+    target_code[2] = 1;
+    target_code[3] = 1;
+    pr_info("it was start\n");
 
-	if (strncmp(targetBuf, start, count) == 0) {
-		//set the target code to 4211
-		target_code[0] = 4;
-		target_code[1] = 2;
-		target_code[2] = 1;
-		target_code[3] = 1;
-		pr_info("it was start\n");
+    scnWrite = 0;
 
-		scnWrite = 0;
+    //set number of guesses to 0
 
-		//set number of guesses to 0
+    num_guesses = 0;
 
-		num_guesses = 0;
+    //set the user buffer to null
+    memset(user_view, 0, PAGE_SIZE);
 
-		//set the user buffer to null
-		memset(user_view, 0, PAGE_SIZE);
+    pr_info("memset done\n");
 
-		pr_info("memset done\n");
+    game_active = true;
 
-		game_active = true;
+    memcpy(last_result, clearRes, 4);
 
-		memcpy(last_result, clearRes, 4);
+    pr_info("copy to user done\n");
+    
+    return count;
+  }
+  else if(strncmp(targetBuf, quit, count) == 0){
 
-		pr_info("copy to user done\n");
+    pr_info("in quit if\n");
 
-		return count;
-	} else if (strncmp(targetBuf, quit, count) == 0) {
+    game_active = false;
+    return count;
+  }
+  
+  pr_err("Invalid argument\n");
 
-		pr_info("in quit if\n");
-
-		game_active = false;
-		return count;
-	}
-
-	pr_err("Invalid argument\n");
-
-	return -EINVAL;
+  return -EINVAL;
 }
 
+
+
 struct file_operations mm_fops = {
-	.read = mm_read,
-	.write = mm_write,
-	.mmap = mm_mmap,
+  .read = mm_read,
+  .write = mm_write,
+  .mmap = mm_mmap,
 };
 
 static struct miscdevice mm_dev = {
-	.minor = MISC_DYNAMIC_MINOR,
-	.name = "mm",
-	.fops = &mm_fops,
-	.mode = 0666,
+  .minor = MISC_DYNAMIC_MINOR,
+  .name = "mm",
+  .fops = &mm_fops,
+  .mode = 0666,
 };
 
 struct file_operations mm_ctl_fops = {
-	.write = mm_ctl_write,
+  .write = mm_ctl_write,
 };
 
 static struct miscdevice mm_ctl_dev = {
-	.minor = MISC_DYNAMIC_MINOR,
-	.name = "mm_ctl",
-	.fops = &mm_ctl_fops,
-	.mode = 0666,
+  .minor = MISC_DYNAMIC_MINOR,
+  .name = "mm_ctl",
+  .fops = &mm_ctl_fops,
+  .mode = 0666,
 };
 
 /**
@@ -394,36 +390,34 @@ static struct miscdevice mm_ctl_dev = {
  */
 static int __init mastermind_init(void)
 {
-	int retval;
-	pr_info("Initializing the game.\n");
-	user_view = vmalloc(PAGE_SIZE);
-	if (!user_view) {
-		pr_err("Could not allocate memory\n");
-		return -ENOMEM;
-	}
+  int retval;
+  pr_info("Initializing the game.\n");
+  user_view = vmalloc(PAGE_SIZE);
+  if (!user_view) {
+    pr_err("Could not allocate memory\n");
+    return -ENOMEM;
+  }
+  
+  /* YOUR CODE HERE */
+  retval = misc_register(&mm_dev);
+  if(retval < 0) goto failedRegister;
 
-	/* YOUR CODE HERE */
-	retval = misc_register(&mm_dev);
-	if (retval < 0)
-		goto failedRegister;
+  retval = misc_register(&mm_ctl_dev);
+  if(retval < 0) goto failedSecondReg;
 
-	retval = misc_register(&mm_ctl_dev);
-	if (retval < 0)
-		goto failedSecondReg;
+  pr_info("Successfully registered devices\n");
+  return 0;
 
-	pr_info("Successfully registered devices\n");
-	return 0;
+ failedRegister:
+  pr_err("Could not register micellanous device\n");
+  vfree(user_view);
+  return -1;
 
-failedRegister:
-	pr_err("Could not register micellanous device\n");
-	vfree(user_view);
-	return -1;
-
-failedSecondReg:
-	pr_err("Could not register ctl device");
-	vfree(user_view);
-	misc_deregister(&mm_dev);
-	return -1;
+ failedSecondReg:   
+  pr_err("Could not register ctl device");
+  vfree(user_view);
+  misc_deregister(&mm_dev);
+  return -1;
 }
 
 /**
@@ -436,7 +430,7 @@ static void __exit mastermind_exit(void)
 
 	/* YOUR CODE HERE */
 	misc_deregister(&mm_dev);
-	misc_deregister(&mm_ctl_dev);
+  misc_deregister(&mm_ctl_dev);
 }
 
 module_init(mastermind_init);
