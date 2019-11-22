@@ -91,10 +91,15 @@ int main(void) {
 	mmDesc = open("/dev/mm", O_RDONLY);
 
 	
-	retVal = read(mmDesc, readBuff, 6);
+	retVal = read(mmDesc, readBuff, 8);
 
 	printf("read buffer: %s\n", readBuff);
+	readBuff[4] = '\0';
 
+	if(strcmp(readBuff, "B1W2") == 0){
+		printf("correct amount of char was read and not more, Test 6 passed\n");
+	}
+	
 	close(mmDesc);
 
 	munmap(dest, PAGE_SIZE);
