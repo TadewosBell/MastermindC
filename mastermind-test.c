@@ -17,7 +17,7 @@ help from:
 int main(void) {
 	printf("Hello, world!\n");
 	int fd, retVal;
-	int fileDesc;
+	int fileDesc, mmDesc;
 	void *dest;
 	char readBuf[100];
 
@@ -43,7 +43,7 @@ int main(void) {
 	if(errno == 22){
 		printf("Correct value returned, Test1 passed\n");
 	}
-
+	close(fileDesc);
 
 	printf("TEST2: if incorrect sized guess causes -EINVAL\n");
 	fileDesc = open("/dev/mm", O_RDWR);
@@ -61,26 +61,31 @@ int main(void) {
 	if(errno == 22){
 		printf("correct value returned, Test3 passed\n");
 	}
+	close(fileDesc);
 
 	//retVal = strcmp()
 	printf("Test4: Check if guess when game inactive causes -EINVAL\n");
+	fileDesc = open("/dev/mm_ctl", O_RDWR);
+	mmDesc = open("/dev/mm", O_RDWR);
+
 	retVal = write(fileDesc, "quit", 4);
-	retVal = write(fileDesc, "1234",4);
+	retVal = write(mmDesc, "1234",4);
 	if(errno == 22){
 		printf("-EINVAL resturned, Test4 passed\n");
 	}
 
 	printf("Test5: check if correct output is saved userview when guess\n");
 	retVal = write(fileDesc, "start", 5);
-	retVal = write(fileDesc, "1234",4);
+	retVal = write(mmDesc, "1234",4);
 	char expString[] = "Guess 1: 1234 | B1W2 \n";
 	int strCmpVal = strcmp(expString,(char *)dest,23);
 
 	printf("String comp %d\n", strCmpVal);
-	
+
 
 	close(fileDesc);
-
+	close(mmDesc);
+	
 	munmap(dest, PAGE_SIZE);
 
 	return 0;
