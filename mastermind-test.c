@@ -58,7 +58,7 @@ int main(void) {
 	printf("TEST: if guess 1234 return B1W2");
 	retVal = write(fileDesc, "1234",4);
 
-	printf("History: %s\n", (char *) dest);
+	printf("History: %s\n", (char) dest);
 
 
 	//retVal = strcmp()
