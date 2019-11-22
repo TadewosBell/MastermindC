@@ -33,7 +33,7 @@ int main(void) {
 	close(fd);
 
 	//FIRST TEST
-	printf("TEST: if new line start causes -EINVAL\n");
+	printf("TEST1: if new line start causes -EINVAL\n");
 	fileDesc = open("/dev/mm_ctl", O_RDWR);
 	if(fileDesc < 0){
 		printf("/dev/mm_ctl didnt open\n");
@@ -41,34 +41,44 @@ int main(void) {
 	}
 	retVal = write(fileDesc, "start\n", 6);
 	if(errno == 22){
-		printf("Correct value returned, Test passed\n");
+		printf("Correct value returned, Test1 passed\n");
 	}
 
 
-	printf("TEST: if incorrect sized guess causes -EINVAL\n");
+	printf("TEST2: if incorrect sized guess causes -EINVAL\n");
 	fileDesc = open("/dev/mm", O_RDWR);
 	if(fileDesc < 0){
 		printf("/dev/mm didnt open\n");
 	}
 	retVal = write(fileDesc, "123456",6);
 	if(errno == 22){
-		printf("correct value returned, Test passed\n");
+		printf("correct value returned, Test2 passed\n");
 	}
 
-	printf("TEST: if incorrect guess characters causes like K -EINVAL\n");
+	printf("TEST3: if incorrect guess characters causes like K -EINVAL\n");
 
 	retVal = write(fileDesc, "1k23",4);
 	if(errno == 22){
-		printf("correct value returned, Test passed\n");
+		printf("correct value returned, Test3 passed\n");
 	}
 
 	//retVal = strcmp()
-	printf("Test: Check if guess when game inactive causes -EINVAL\n");
+	printf("Test4: Check if guess when game inactive causes -EINVAL\n");
 	retVal = write(fileDesc, "quit", 4);
 	retVal = write(fileDesc, "1234",4);
 	if(errno == 22){
-		printf("-EINVAL resturned, Test passed\n");
+		printf("-EINVAL resturned, Test4 passed\n");
 	}
+
+	printf("Test5: check if correct output is saved userview when guess\n");
+	retVal = write(fileDesc, "start", 5);
+	retVal = write(fileDesc, "1234",4);
+	char expString[] = "Guess 1: 1234 | B1W2 \n";
+	int strCmpVal = strcmp(expString,(char *)dest,23);
+
+	printf("String comp %d\n", strCmpVal);
+	
+
 	close(fileDesc);
 
 	munmap(dest, PAGE_SIZE);
