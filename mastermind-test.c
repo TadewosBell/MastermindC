@@ -55,18 +55,20 @@ int main(void) {
 		printf("correct value returned, Test passed\n");
 	}
 
-	printf("TEST: if incorrect guess charactures causes -EINVAL\n");
+	printf("TEST: if incorrect guess characters causes like K -EINVAL\n");
 
-	retVal = write(fileDesc, "1k23",6);
+	retVal = write(fileDesc, "1k23",4);
 	if(errno == 22){
 		printf("correct value returned, Test passed\n");
 	}
 
-
 	//retVal = strcmp()
-
-
-
+	printf("Test: Check if guess when game inactive causes -EINVAL\n");
+	retVal = write(fileDesc, "quit", 4);
+	retVal = write(fileDesc, "1234",4);
+	if(errno == 22){
+		printf("-EINVAL resturned, Test passed\n");
+	}
 	close(fileDesc);
 
 	munmap(dest, PAGE_SIZE);
