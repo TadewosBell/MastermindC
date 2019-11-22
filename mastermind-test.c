@@ -29,32 +29,45 @@ int main(void) {
 		printf("failed memory map");
 		exit(1);
 	}
-	munmap(dest, PAGE_SIZE);
 
 	close(fd);
 
-
+	//FIRST TEST
+	printf("TEST: if new line start causes -EINVAL\n");
 	fileDesc = open("/dev/mm_ctl", O_RDWR);
-
 	if(fileDesc < 0){
-		printf("didnt open\n");
+		printf("/dev/mm_ctl didnt open\n");
 		return 0;
 	}
-
 	retVal = write(fileDesc, "start\n", 6);
-	
-	printf("retVal %d\n", retVal);
-	printf("errno %d\n", errno);
-
 	if(errno == 22){
-		printf("Correct value returned");
+		printf("Correct value returned, Test passed\n");
 	}
 
-	retVal = read(fileDesc, readBuf, 18);
 
-	printf("read result %s\n", readBuf);
+	printf("TEST: if incorrect sized guess causes -EINVAL\n")
+	fileDesc = open("/dev/mm", O_RDWR);
+	if(fileDesc < 0){
+		printf("/dev/mm didnt open\n");
+	}
+	retVal = write(fileDesc, "123456",6);
+	if(errno == 22){
+		printf("correct value returned, Test passed\n");
+	}
+
+	printf("TEST: if guess 1234 return B1W2")
+	retVal = write(fileDesc, "1234",4);
+
+	printf("History: %s\n", (char *) dest);
+
+
+	//retVal = strcmp()
+
+
 
 	close(fileDesc);
+
+	munmap(dest, PAGE_SIZE);
 
 	return 0;
 }

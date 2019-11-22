@@ -226,9 +226,7 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
   last_result[1] = blackPeg;
   last_result[3] = whitePeg;
 
-
   pr_info("result succesfully copied to last result array\n");
-
 
   scnWrite += scnprintf(user_view + scnWrite, PAGE_SIZE - scnWrite, "Guess %d: %c%c%c%c | %s \n", num_guesses, targetBuf[0],targetBuf[1],targetBuf[2],targetBuf[3], last_result);
 
@@ -326,6 +324,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
     memset(user_view, 0, sizeof(user_view));
 
     pr_info("memset done\n");
+
     game_active = true;
 
     memcpy(last_result, clearRes, 4);
@@ -335,12 +334,15 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
     return count;
   }
   else if(strncmp(targetBuf, quit, count) == 0){
+
     pr_info("in quit if\n");
+
     game_active = false;
     return count;
   }
   
   pr_err("Invalid argument\n");
+
   return -EINVAL;
 }
 
