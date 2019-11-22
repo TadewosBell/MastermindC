@@ -19,7 +19,6 @@ int main(void) {
 	int fd, retVal;
 	int fileDesc, mmDesc;
 	void *dest;
-	char readBuf[100];
 
 	fd = open("/dev/mm",O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
 
@@ -27,7 +26,7 @@ int main(void) {
 
 	if(dest == MAP_FAILED){
 		printf("failed memory map");
-		exit(1);
+		return 0;
 	}
 
 	close(fd);
@@ -51,7 +50,7 @@ int main(void) {
 		printf("/dev/mm didnt open\n");
 	}
 	retVal = write(fileDesc, "123456",6);
-	if(errno == 22){
+	if(errno == 22 && retVal){
 		printf("correct value returned, Test2 passed\n");
 	}
 
@@ -81,7 +80,7 @@ int main(void) {
 	int strCmpVal = strcmp(expString,(char *)dest);
 
 	if(strCmpVal == 0){
-		printf("Passed history and mmap function correctly\n");
+		printf("history and mmap function correctly, Test 5 passed\n");
 	}
 
 	close(fileDesc);
