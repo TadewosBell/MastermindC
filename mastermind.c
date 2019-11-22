@@ -1,6 +1,13 @@
 /* Name: Tadewos Bellete
    Email: bell6@umbc.edu
-   Test 
+   Description: mastermind game but written with device drivers
+
+   Citations:
+   https://www.tutorialspoint.com/c_standard_library/c_function_strncmp.htm
+   https://stackoverflow.com/questions/16955936/string-termination-char-c-0-vs-char-c-0
+   http://man7.org/linux/man-pages/man3/errno.3.html
+   https://www.avrfreaks.net/forum/convert-int-char-0
+   https://www.csee.umbc.edu/~jtang/cs421.f19/homework/hw4/hw4_test.c
  */
 
 /*
@@ -49,6 +56,11 @@ static char last_result[4];
 /** buffer that records all of user's guesses and their results */
 static char *user_view;
 
+/*
+* charToInt
+* buf: characture to convert to int
+* out puts correct int for char and -1 when invalid
+*/
 static int charToInt(char buf){
   int i,retVal;
   char stringInt[] = {'0','1','2','3','4','5','6','7','8','9'};

@@ -68,7 +68,7 @@ int main(void) {
 		printf("correct value returned, Test3 passed\n");
 	}
 
-	printf("TEST4: if incorrect guess characters causes like K -EINVAL\n");
+	printf("TEST4: if incorrect guess characters like K causes -EINVAL\n");
 
 	retVal = write(fileDesc, "1k23",4);
 	if(errno == 22){
@@ -84,7 +84,7 @@ int main(void) {
 	retVal = write(fileDesc, "quit", 4);
 	retVal = write(mmDesc, "1234",4);
 	if(errno == 22){
-		printf("-EINVAL resturned, Test5 passed\n");
+		printf("-EINVAL returned, Test5 passed\n");
 	}
 
 	printf("Test6: check if correct output is saved userview when guess\n");
@@ -108,7 +108,7 @@ int main(void) {
 	readBuff[4] = '\0';
 
 	if(strcmp(readBuff, "B1W2") == 0){
-		printf("correct amount of char was read and not more, Test 7 passed\n");
+		printf("correct amount of char (4) was read and not more, Test 7 passed\n");
 	}
 
 	close(mmDesc);
