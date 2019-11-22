@@ -18,11 +18,11 @@ int main(void) {
 	int fd, retval;
 	int fileDesc;
 	void *dest;
-	char readBuf[];
+	char readBuf[100];
 
-	fd = Open("/dev/mm",O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+	fd = open("/dev/mm",O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
 
-	dest = mmap(NULL, PAGE_SIZE,PROT_READ,MAP_SHARED,fd,0)
+	dest = mmap(NULL, PAGE_SIZE,PROT_READ,MAP_SHARED,fd,0);
 
 	if(dest == MAP_FAILED){
 		printf("failed memory map");
