@@ -15,7 +15,7 @@ help from:
 
 int main(void) {
 	printf("Hello, world!\n");
-	int fd, retval;
+	int fd, retVal;
 	int fileDesc;
 	void *dest;
 	char readBuf[100];
