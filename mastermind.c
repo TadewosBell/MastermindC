@@ -341,7 +341,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
   }
   
   pr_err("Invalid argument\n");
-  return -1;
+  return EINVAL;
 }
 
 

@@ -41,6 +41,9 @@ int main(void) {
 	}
 
 	retVal = write(fileDesc, "start\n", 6);
+	
+	printf("retVal %d\n", retVal);
+	printf("errno %d\n", errno);
 
 	retVal = read(fileDesc, readBuf, 18);
 
