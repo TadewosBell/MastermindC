@@ -32,9 +32,21 @@ int main(void) {
 	}
 
 	close(fd);
+	printf("Test 1: Test if game wasnt started ???? is returned\n");
+	mmDesc = open("/dev/mm", O_RDONLY);
 
-	//FIRST TEST
-	printf("TEST1: if new line start causes -EINVAL\n");
+	
+	retVal = read(mmDesc, readBuff, 4);
+	readBuff[4] = '\0';
+
+	if(strcmp(readBuff, "????") == 0){
+		printf("correct ???? returned, Test 1 passed\n");
+	}
+
+
+
+	//second TEST
+	printf("TEST2: if new line start causes -EINVAL\n");
 	fileDesc = open("/dev/mm_ctl", O_RDWR);
 	if(fileDesc < 0){
 		printf("/dev/mm_ctl didnt open\n");
@@ -42,64 +54,63 @@ int main(void) {
 	}
 	retVal = write(fileDesc, "start\n", 6);
 	if(errno == 22){
-		printf("Correct value returned, Test1 passed\n");
+		printf("Correct value returned, Test2 passed\n");
 	}
 	close(fileDesc);
 
-	printf("TEST2: if incorrect sized guess causes -EINVAL\n");
+	printf("TEST3: if incorrect sized guess causes -EINVAL\n");
 	fileDesc = open("/dev/mm", O_RDWR);
 	if(fileDesc < 0){
 		printf("/dev/mm didnt open\n");
 	}
 	retVal = write(fileDesc, "123456",6);
 	if(errno == 22 && retVal){
-		printf("correct value returned, Test2 passed\n");
+		printf("correct value returned, Test3 passed\n");
 	}
 
-	printf("TEST3: if incorrect guess characters causes like K -EINVAL\n");
+	printf("TEST4: if incorrect guess characters causes like K -EINVAL\n");
 
 	retVal = write(fileDesc, "1k23",4);
 	if(errno == 22){
-		printf("correct value returned, Test3 passed\n");
+		printf("correct value returned, Test4 passed\n");
 	}
 	close(fileDesc);
 
 	//retVal = strcmp()
-	printf("Test4: Check if guess when game inactive causes -EINVAL\n");
+	printf("Test5: Check if guess when game inactive causes -EINVAL\n");
 	fileDesc = open("/dev/mm_ctl", O_RDWR);
 	mmDesc = open("/dev/mm", O_RDWR);
 
 	retVal = write(fileDesc, "quit", 4);
 	retVal = write(mmDesc, "1234",4);
 	if(errno == 22){
-		printf("-EINVAL resturned, Test4 passed\n");
+		printf("-EINVAL resturned, Test5 passed\n");
 	}
 
-	printf("Test5: check if correct output is saved userview when guess\n");
+	printf("Test6: check if correct output is saved userview when guess\n");
 	retVal = write(fileDesc, "start", 5);
 	retVal = write(mmDesc, "1234",4);
 	char expString[] = "Guess 1: 1234 | B1W2 \n";
 	int strCmpVal = strcmp(expString,(char *)dest);
 
 	if(strCmpVal == 0){
-		printf("history and mmap function correctly, Test 5 passed\n");
+		printf("history and mmap function correctly, Test 6 passed\n");
 	}
 	close(fileDesc);
 	close(mmDesc);
 
-	printf("Test 6: Test if i can read bast last_result\n");
+
+	printf("Test 7: Test if i can read bast last_result\n");
 	mmDesc = open("/dev/mm", O_RDONLY);
 
 	
-	retVal = read(mmDesc, readBuff, 8);
-
-	printf("read buffer: %s\n", readBuff);
+	retVal = read(mmDesc, readBuff, 20);
 	readBuff[4] = '\0';
 
 	if(strcmp(readBuff, "B1W2") == 0){
-		printf("correct amount of char was read and not more, Test 6 passed\n");
+		printf("correct amount of char was read and not more, Test 7 passed\n");
 	}
-	
+
 	close(mmDesc);
 
 	munmap(dest, PAGE_SIZE);
