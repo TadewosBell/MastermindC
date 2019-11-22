@@ -231,7 +231,7 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 
   pr_info("result succesfully copied to last result array\n");
 
-  scnWrite += scnprintf(user_view + scnWrite, PAGE_SIZE - scnWrite, "Guess %d: %c%c%c%c | %s \n", num_guesses, targetBuf[0],targetBuf[1],targetBuf[2],targetBuf[3], last_result);
+  scnWrite += scnprintf(user_view + scnWrite, PAGE_SIZE - scnWrite, "Guess %d: %c%c%c%c | %c%c%c%c \n", num_guesses, targetBuf[0],targetBuf[1],targetBuf[2],targetBuf[3], last_result[0],last_result[1],last_result[2],last_result[3]);
 
   pr_info("history %s", user_view);
 
