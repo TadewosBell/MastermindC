@@ -46,7 +46,7 @@ int main(void) {
 	printf("retVal %d\n", retVal);
 	printf("errno %d\n", errno);
 
-	if(retVal == 22){
+	if(errno == 22){
 		printf("Correct value returned");
 	}
 
