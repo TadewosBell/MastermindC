@@ -15,7 +15,7 @@ help from:
 #include <errno.h>
 
 int main(void) {
-	printf("Hello, world!\n");
+	printf("Unit tests!\n");
 	int fd, retVal;
 	int fileDesc, mmDesc;
 	void *dest;
@@ -80,8 +80,9 @@ int main(void) {
 	char expString[] = "Guess 1: 1234 | B1W2 \n";
 	int strCmpVal = strcmp(expString,(char *)dest);
 
-	printf("String comp %d\n", strCmpVal);
-	printf("string history %s\n", (char *)dest);
+	if(strCmpVal == 0){
+		printf("Passed history and mmap function correctly\n");
+	}
 
 	close(fileDesc);
 	close(mmDesc);
