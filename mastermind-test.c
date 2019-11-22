@@ -13,6 +13,7 @@ help from:
 #include <sys/types.h>
 #include <sys/user.h>
 #include <errno.h>
+#include <string.h>
 
 int main(void) {
 	printf("Unit tests!\n");
