@@ -87,14 +87,14 @@ int main(void) {
 	close(fileDesc);
 	close(mmDesc);
 
-	printf("Test 6: Test if i can read bast last_result\n")
+	printf("Test 6: Test if i can read bast last_result\n");
 	mmDesc = open("/dev/mm", O_RDONLY);
 
 	
 	retVal = read(mmDesc, readBuff, 6);
 
 	printf("read buffer: %s\n", readBuff);
-	
+
 	close(mmDesc);
 
 	munmap(dest, PAGE_SIZE);
