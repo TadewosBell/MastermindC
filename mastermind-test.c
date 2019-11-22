@@ -12,6 +12,7 @@ help from:
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/user.h>
+#include <errno.h>
 
 int main(void) {
 	printf("Hello, world!\n");
