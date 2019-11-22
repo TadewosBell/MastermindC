@@ -15,12 +15,12 @@ help from:
 
 int main(void) {
 	printf("Hello, world!\n");
-	int fd,retval;
+	int fd, retval;
 	int fileDesc;
 	void *dest;
 	char readBuf[];
 
-	fd = Open("/dev/mm",O_RDWR | O_CREAT, S_IRUSR | S_IWUSR)
+	fd = Open("/dev/mm",O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
 
 	dest = mmap(NULL, PAGE_SIZE,PROT_READ,MAP_SHARED,fd,0)
 
