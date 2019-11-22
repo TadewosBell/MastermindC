@@ -51,8 +51,9 @@ static char *user_view;
 
 static int charToInt(char buf){
   int i,retVal;
-  retVal = -1;
   char stringInt[] = {'0','1','2','3','4','5','6','7','8','9'};
+
+  retVal = -1;
   for(i=0;i < 10; i++){
     if(buf == stringInt[i]){
       retVal = i;
