@@ -207,6 +207,9 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 
   //convert guess characters to int and store in an array
   for(i = 0; i < NUM_PEGS; i++){
+    if(charToInt(targetBuf[i]) == -1){
+      return -EINVAL;
+    }
     guess[i] = charToInt(targetBuf[i]);
   }
   for(i=0; i < NUM_PEGS; i++){

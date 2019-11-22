@@ -55,10 +55,12 @@ int main(void) {
 		printf("correct value returned, Test passed\n");
 	}
 
-	printf("TEST: if guess 1234 return B1W2");
-	retVal = write(fileDesc, "1234",4);
+	printf("TEST: if incorrect guess charactures causes -EINVAL\n");
 
-	printf("History: %s\n", (char *)retVal);
+	retVal = write(fileDesc, "1k23",6);
+	if(errno == 22){
+		printf("correct value returned, Test passed\n");
+	}
 
 
 	//retVal = strcmp()
