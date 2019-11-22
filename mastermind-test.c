@@ -11,5 +11,17 @@
 
 int main(void) {
 	printf("Hello, world!\n");
+
+	int retval;
+
+	fileDesc = open('/dev/mm_ctl', O_ROWR);
+	if(retval < 0){
+		return 0;
+	}
+
+	write(fileDesc, "start", 5);
+
+	close(fileDesc);
+
 	return 0;
 }
