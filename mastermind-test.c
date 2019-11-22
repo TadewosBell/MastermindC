@@ -14,7 +14,7 @@ int main(void) {
 
 	int retval;
 
-	fileDesc = open('/dev/mm_ctl', O_ROWR);
+	fileDesc = open('/dev/mm_ctl', O_RDWR);
 	if(retval < 0){
 		return 0;
 	}
