@@ -40,7 +40,7 @@ int main(void) {
 		return 0;
 	}
 
-	retVal = write(fileDesc, "start\n", 5);
+	retVal = write(fileDesc, "start\n", 6);
 
 	retVal = read(fileDesc, readBuf, 18);
 
