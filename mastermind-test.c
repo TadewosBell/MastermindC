@@ -20,6 +20,7 @@ int main(void) {
 	int fd, retVal;
 	int fileDesc, mmDesc;
 	void *dest;
+	char readBuff[100];
 
 	fd = open("/dev/mm",O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
 
@@ -83,8 +84,17 @@ int main(void) {
 	if(strCmpVal == 0){
 		printf("history and mmap function correctly, Test 5 passed\n");
 	}
-
 	close(fileDesc);
+	close(mmDesc);
+
+	printf("Test 6: Test if i can read bast last_result\n")
+	mmDesc = open("/dev/mm", O_RDONLY);
+
+	
+	retVal = read(mmDesc, readBuff, 6);
+
+	printf("read buffer: %s\n", readBuff);
+	
 	close(mmDesc);
 
 	munmap(dest, PAGE_SIZE);
