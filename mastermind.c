@@ -189,7 +189,7 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 {
 	/* FIXME */
   unsigned right,rightVal;
-  int retVal, i, j;
+  int i, j;
   char blackPeg, whitePeg;
   char targetBuf[NUM_PEGS];
   int guess[NUM_PEGS];
@@ -305,9 +305,6 @@ static int mm_mmap(struct file *filp, struct vm_area_struct *vma)
 static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 			    size_t count, loff_t * ppos)
 {
-  /* FIXME */
-  int retVal;
-  int i;
   char start[5] = {'s','t','a','r','t'};
   char quit[] = {'q','u','i','t'};
   char clearRes[] = {'B','-','W','-'};
@@ -336,7 +333,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
     num_guesses = 0;
 
     //set the user buffer to null
-    memset(user_view, 0, sizeof(user_view));
+    memset(user_view, 0, PAGE_SIZE);
 
     pr_info("memset done\n");
 
