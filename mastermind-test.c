@@ -45,7 +45,7 @@ int main(void) {
 	}
 
 
-	printf("TEST: if incorrect sized guess causes -EINVAL\n")
+	printf("TEST: if incorrect sized guess causes -EINVAL\n");
 	fileDesc = open("/dev/mm", O_RDWR);
 	if(fileDesc < 0){
 		printf("/dev/mm didnt open\n");
@@ -55,7 +55,7 @@ int main(void) {
 		printf("correct value returned, Test passed\n");
 	}
 
-	printf("TEST: if guess 1234 return B1W2")
+	printf("TEST: if guess 1234 return B1W2");
 	retVal = write(fileDesc, "1234",4);
 
 	printf("History: %s\n", (char *) dest);
