@@ -413,16 +413,12 @@ static int __init mastermind_init(void)
 
 	pr_info("Successfully registered devices\n");
 	return 0;
-
+failedSecondReg:
+	pr_err("Could not register ctl device");
+	misc_deregister(&mm_dev);
 failedRegister:
 	pr_err("Could not register micellanous device\n");
 	vfree(user_view);
-	return -1;
-
-failedSecondReg:
-	pr_err("Could not register ctl device");
-	vfree(user_view);
-	misc_deregister(&mm_dev);
 	return -1;
 }
 
