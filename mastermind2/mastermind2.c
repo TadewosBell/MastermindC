@@ -43,6 +43,8 @@
 /** true if user is in the middle of a game */
 static bool game_active;
 
+size_t scnWrite = 0;
+
 /** code that player is trying to guess */
 static int target_code[NUM_PEGS];
 
