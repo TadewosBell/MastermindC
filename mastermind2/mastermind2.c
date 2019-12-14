@@ -533,7 +533,6 @@ static int mastermind_probe(struct platform_device *pdev)
 		goto failedSecondReg;
 
 	pr_info("Successfully registered devices\n");
-	return 0;
 	/*
 	 * You will need to integrate the following resource allocator
 	 * into your code. That also means properly releasing the
