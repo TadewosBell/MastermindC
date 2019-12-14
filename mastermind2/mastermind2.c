@@ -369,6 +369,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
     } else if(strncmp(targetBuf, color, 6) == 0){
         colorChoice = charToInt(targetBuf[7]);
         pr_info("color: %d \n", colorChoice);
+        return count;
     }
 	pr_err("Invalid argument\n");
 	return -EINVAL;
