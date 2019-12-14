@@ -52,9 +52,15 @@
 /** true if user is in the middle of a game */
 static bool game_active;
 
+static int num_games = 0;
+
+static int num_games_started = 0;
+
 size_t scnWrite = 0;
 
 unsigned long flags;
+
+static int num_colors = 6;
 /** code that player is trying to guess */
 static int target_code[NUM_PEGS];
 
@@ -232,6 +238,9 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 			return -EINVAL;
 		}
 		guess[i] = charToInt(targetBuf[i]);
+        if(guess[i] > num_colors){
+            return -EINVAL;
+        }
 	}
 	for (i = 0; i < NUM_PEGS; i++) {
 		pr_info("guess %d: %d\n", i, guess[i]);
@@ -354,6 +363,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 		memset(user_view, 0, PAGE_SIZE);
 		pr_info("memset done\n");
 		game_active = true;
+        num_games += 1;
 		memcpy(last_result, clearRes, 4);
 		pr_info("copy to user done\n");
         spin_unlock(&dev_lock);
@@ -364,17 +374,25 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 		pr_info("in quit if\n");
         spin_lock(&dev_lock);
 		game_active = false;
+        num_games -= 1;
         spin_unlock(&dev_lock);
 		return count;
     } else if(strncmp(targetBuf, color, 6) == 0){
         colorChoice = charToInt(targetBuf[7]);
         pr_info("color: %d \n", colorChoice);
         if(capable(CAP_SYS_ADMIN)){
-            pr_info("sys administrator permission");
+            pr_info("sys administrator permission\n");
         }
         else{
-            pr_info("not sys administrator");
+            pr_info("not sys administrator\n");
+            return -EACCES;
         }
+        if(colorChoice < 2 || colorChoice > 9){
+            return -EINVAL;
+        }
+        spin_lock(&dev_lock);
+        num_colors = colorChoice;
+        spin_unlock(&dev_lock);
         return count;
     }
 	pr_err("Invalid argument\n");
@@ -453,6 +471,8 @@ static irqreturn_t cs421net_bottom(int irq, void *cookie)
 	return IRQ_HANDLED;
 }
 
+size_t stat_write = 0;
+
 /**
  * mm_stats_show() - callback invoked when a process reads from
  * /sys/devices/platform/mastermind/stats
@@ -477,7 +497,10 @@ static ssize_t mm_stats_show(struct device *dev,
 			     struct device_attribute *attr, char *buf)
 {
 	/* Part 3: YOUR CODE HERE */
-	return -EPERM;
+    spin_lock(&dev_lock);
+    stat_write += scnprintf(buf + stat_write,PAGE_SIZE - stat_write,"Number of colors: %d\nNumber of Active Games: %d\nNumber of Active Games: %d\n", num_colors, num_games,num_games_started);
+	spin_unlock(&dev_lock);
+    return stat_write;
 }
 
 static DEVICE_ATTR(stats, S_IRUGO, mm_stats_show, NULL);
