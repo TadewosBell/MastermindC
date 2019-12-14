@@ -504,7 +504,6 @@ static int mastermind_probe(struct platform_device *pdev)
 	 * into your code. That also means properly releasing the
 	 * resource if the function fails.
 	 */
-	int retval;
 	retval = device_create_file(&pdev->dev, &dev_attr_stats);
 	if (retval) {
 		pr_err("Could not create sysfs entry\n");
