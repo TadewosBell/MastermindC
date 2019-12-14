@@ -538,11 +538,21 @@ static int mastermind_probe(struct platform_device *pdev)
 	 * resource if the function fails.
 	 */
 	retval = device_create_file(&pdev->dev, &dev_attr_stats);
-	if (retval) {
+	if (retval < 0) {
 		pr_err("Could not create sysfs entry\n");
+        goto failedDeviceCreate;
+	}
+
+    retval = request_threaded_irq(CS421NET_IRQ,cs421net_top,cs421net_bottom,0,'Master Mod',pdev);
+    if (retval < 0) {
+		pr_err("Could not register Interrupt handler\n");
+        goto failedToRegisterHandler;
 	}
 	return retval;
 
+failedToRegisterHandler:
+    pr_err("Could not register Interrupt handler\n"); 
+    device_remove_file(&pdev->dev, &dev_attr_stats);
 failedDeviceCreate:
     pr_err("Could not create file");
     misc_deregister(&mm_ctl_dev);
@@ -567,7 +577,7 @@ static int mastermind_remove(struct platform_device *pdev)
 	/* Part 1: YOUR CODE HERE */
     pr_info("Freeing resources.\n");
 	vfree(user_view);
-
+    free_irq(CS421NET_IRQ, NULL);
 	/* YOUR CODE HERE */
 	misc_deregister(&mm_dev);
 	misc_deregister(&mm_ctl_dev);
