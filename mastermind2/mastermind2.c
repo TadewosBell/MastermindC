@@ -159,7 +159,7 @@ static ssize_t mm_read(struct file *filp, char __user * ubuf, size_t count,
 {
 	/* FIXME */
 	char fourQ[] = { '?', '?', '?', '?' };
-    spin_lock_irqsave(&dev_lock);
+    spin_lock(&dev_lock);
 
 	if (game_active == false) {
 		memcpy(last_result, fourQ, sizeof(fourQ));
@@ -221,7 +221,7 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 		return -EINVAL;
 	}
 	//increment the number of guesses made if entry is valid
-    spin_lock_irqsave(&dev_lock);
+    spin_lock(&dev_lock);
 	num_guesses = num_guesses + 1;
 
 	//copy entry to buffer
@@ -286,7 +286,7 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
  */
 static int mm_mmap(struct file *filp, struct vm_area_struct *vma)
 {   
-    spin_lock_irqsave(&dev_lock);
+    spin_lock(&dev_lock);
 	unsigned long size = (unsigned long)(vma->vm_end - vma->vm_start);
 	unsigned long page = vmalloc_to_pfn(user_view);
 	if (size > PAGE_SIZE){
@@ -335,7 +335,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 	size_t copyLn = 8;
 	pr_info("mm_ctl_write all variables intialized and started\n");
 
-    spin_lock_irqsave(&dev_lock);
+    spin_lock(&dev_lock);
 	if (count < sizeof(targetBuf))
 		copyLn = count;
 
