@@ -496,9 +496,8 @@ size_t stat_write = 0;
 static ssize_t mm_stats_show(struct device *dev,
 			     struct device_attribute *attr, char *buf)
 {
-	/* Part 3: YOUR CODE HERE */
     spin_lock(&dev_lock);
-    stat_write += scnprintf(buf + stat_write,PAGE_SIZE - stat_write,"Number of colors: %d\nNumber of Active Games: %d\nNumber of Active Games: %d\n", num_colors, num_games,num_games_started);
+    stat_write += scnprintf(buf + stat_write,PAGE_SIZE - stat_write,"CS421 Mastermind Stats\nNumber of colors: %d\nNumber of Active Games: %d\nNumber of Active Games: %d\n", num_colors, num_games,num_games_started);
 	spin_unlock(&dev_lock);
     return stat_write;
 }
