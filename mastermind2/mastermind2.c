@@ -159,7 +159,7 @@ static ssize_t mm_read(struct file *filp, char __user * ubuf, size_t count,
 {
 	/* FIXME */
 	char fourQ[] = { '?', '?', '?', '?' };
-    spin_lock(&dev_lock);
+    spin_lock_irqsave(&dev_lock);
 
 	if (game_active == false) {
 		memcpy(last_result, fourQ, sizeof(fourQ));
@@ -167,6 +167,7 @@ static ssize_t mm_read(struct file *filp, char __user * ubuf, size_t count,
 	}
 	if (*ppos >= sizeof(last_result)) {
 		pr_info("ppos was greater\n");
+        spin_unlock(&dev_lock);
 		return 0;
 	}
 	if (*ppos + count > sizeof(last_result)) {
@@ -175,6 +176,7 @@ static ssize_t mm_read(struct file *filp, char __user * ubuf, size_t count,
 	}
 	if (copy_to_user(ubuf, last_result + *ppos, count) != 0) {
 		pr_info("ppos + count was greater\n");
+        spin_unlock(&dev_lock);
 		return -EFAULT;
 	}
 	*ppos += count;
@@ -215,10 +217,11 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 
     
 	if (game_active == false || count < NUM_PEGS) {
+        spin_unlock(&dev_lock);
 		return -EINVAL;
 	}
 	//increment the number of guesses made if entry is valid
-    spin_lock(&dev_lock);
+    spin_lock_irqsave(&dev_lock);
 	num_guesses = num_guesses + 1;
 
 	//copy entry to buffer
@@ -227,6 +230,7 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 	//convert guess characters to int and store in an array
 	for (i = 0; i < NUM_PEGS; i++) {
 		if (charToInt(targetBuf[i]) == -1) {
+            spin_unlock(&dev_lock);
 			return -EINVAL;
 		}
 		guess[i] = charToInt(targetBuf[i]);
@@ -258,7 +262,7 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 		      last_result[3]);
     if(charToInt(blackPeg) == 4){
         scnWrite += scnprintf(user_view + scnWrite,PAGE_SIZE - scnWrite,"You Won the game! \n");
-        game_active = false;
+        game_active
     }
 	pr_info("history %s", user_view);
     spin_unlock(&dev_lock);
@@ -282,15 +286,18 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
  */
 static int mm_mmap(struct file *filp, struct vm_area_struct *vma)
 {   
-    spin_lock(&dev_lock);
+    spin_lock_irqsave(&dev_lock);
 	unsigned long size = (unsigned long)(vma->vm_end - vma->vm_start);
 	unsigned long page = vmalloc_to_pfn(user_view);
-	if (size > PAGE_SIZE)
+	if (size > PAGE_SIZE){
+        spin_unlock(&dev_lock);
 		return -EIO;
+    }
 	vma->vm_pgoff = 0;
 	vma->vm_page_prot = PAGE_READONLY;
 	if (remap_pfn_range(vma, vma->vm_start, page, size, vma->vm_page_prot))
-		return -EAGAIN;
+		spin_unlock(&dev_lock);
+        return -EAGAIN;
     spin_unlock(&dev_lock);
 	return 0;
 }
@@ -328,7 +335,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 	size_t copyLn = 8;
 	pr_info("mm_ctl_write all variables intialized and started\n");
 
-    spin_lock(&dev_lock);
+    spin_lock_irqsave(&dev_lock);
 	if (count < sizeof(targetBuf))
 		copyLn = count;
 
@@ -362,13 +369,14 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 		memcpy(last_result, clearRes, 4);
 
 		pr_info("copy to user done\n");
-
+        spin_unlock(&dev_lock);
 		return count;
 	} else if (strncmp(targetBuf, quit, count) == 0) {
 
 		pr_info("in quit if\n");
 
 		game_active = false;
+        spin_unlock(&dev_lock);
 		return count;
 	}
 
