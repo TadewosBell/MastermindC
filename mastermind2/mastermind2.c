@@ -262,7 +262,7 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 		      last_result[3]);
     if(charToInt(blackPeg) == 4){
         scnWrite += scnprintf(user_view + scnWrite,PAGE_SIZE - scnWrite,"You Won the game! \n");
-        game_active
+        game_active = false;
     }
 	pr_info("history %s", user_view);
     spin_unlock(&dev_lock);
