@@ -1,6 +1,15 @@
-#include "cs421net.h"
+/* Name: Tadewos Bellete
+   Email: bell6@umbc.edu
+   Description: mastermind game but written with device drivers
 
-/* YOUR CODE HERE */
+   Citations:
+   https://www.tutorialspoint.com/c_standard_library/c_function_strncmp.htm
+   https://stackoverflow.com/questions/16955936/string-termination-char-c-0-vs-char-c-0
+   http://man7.org/linux/man-pages/man3/errno.3.html
+   https://www.avrfreaks.net/forum/convert-int-char-0
+   https://www.csee.umbc.edu/~jtang/cs421.f19/homework/hw4/hw4_test.c
+ */
+#include "cs421net.h"
 #include <fcntl.h>
 #include <pthread.h>
 #include <stdio.h>

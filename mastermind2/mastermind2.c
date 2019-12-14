@@ -1,5 +1,14 @@
-/* YOUR FILE-HEADER COMMENT HERE */
+/* Name: Tadewos Bellete
+   Email: bell6@umbc.edu
+   Description: mastermind game but written with device drivers
 
+   Citations:
+   https://www.tutorialspoint.com/c_standard_library/c_function_strncmp.htm
+   https://stackoverflow.com/questions/16955936/string-termination-char-c-0-vs-char-c-0
+   http://man7.org/linux/man-pages/man3/errno.3.html
+   https://www.avrfreaks.net/forum/convert-int-char-0
+   https://www.csee.umbc.edu/~jtang/cs421.f19/homework/hw4/hw4_test.c
+ */
 /*
  * This file uses kernel-doc style comments, which is similar to
  * Javadoc and Doxygen-style comments.  See
@@ -34,7 +43,7 @@
 #include <linux/uaccess.h>
 #include <linux/uidgid.h>
 #include <linux/vmalloc.h>
-
+#include <linux/spinlock.h>
 #include "nf_cs421net.h"
 
 #define NUM_PEGS 4
@@ -56,6 +65,8 @@ static char last_result[4];
 
 /** buffer that records all of user's guesses and their results */
 static char *user_view;
+
+static DEFINE_SPINLOCK(dev_lock);
 
 /*
 * charToInt
@@ -148,6 +159,7 @@ static ssize_t mm_read(struct file *filp, char __user * ubuf, size_t count,
 {
 	/* FIXME */
 	char fourQ[] = { '?', '?', '?', '?' };
+    spin_lock(&dev_lock);
 
 	if (game_active == false) {
 		memcpy(last_result, fourQ, sizeof(fourQ));
@@ -167,6 +179,7 @@ static ssize_t mm_read(struct file *filp, char __user * ubuf, size_t count,
 	}
 	*ppos += count;
 
+    spin_unlock(&dev_lock);
 	return count;
 }
 
@@ -200,27 +213,16 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 	char targetBuf[NUM_PEGS];
 	int guess[NUM_PEGS];
 
+    
 	if (game_active == false || count < NUM_PEGS) {
 		return -EINVAL;
 	}
 	//increment the number of guesses made if entry is valid
+    spin_lock(&dev_lock);
 	num_guesses = num_guesses + 1;
 
 	//copy entry to buffer
 	memcpy(targetBuf, ubuf, NUM_PEGS);
-
-	//debug code
-	for (i = 0; i < NUM_PEGS; i++) {
-		pr_info("input %d: %c\n", i, targetBuf[i]);
-		if (charToInt(targetBuf[i]) == target_code[i]) {
-			pr_info("they are equal\n");
-		}
-		for (j = 0; j < NUM_PEGS; j++) {
-			if (charToInt(targetBuf[i]) == target_code[i]) {
-				pr_info("right value\n");
-			}
-		}
-	}
 
 	//convert guess characters to int and store in an array
 	for (i = 0; i < NUM_PEGS; i++) {
@@ -254,9 +256,12 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 		      targetBuf[0], targetBuf[1], targetBuf[2], targetBuf[3],
 		      last_result[0], last_result[1], last_result[2],
 		      last_result[3]);
-
+    if(charToInt(blackPeg) == 4){
+        scnWrite += scnprintf(user_view + scnWrite,PAGE_SIZE - scnWrite,"You Won the game! \n");
+        game_active = false;
+    }
 	pr_info("history %s", user_view);
-
+    spin_unlock(&dev_lock);
 	return count;
 }
 
@@ -276,7 +281,8 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
  * Return: 0 on success, negative on error.
  */
 static int mm_mmap(struct file *filp, struct vm_area_struct *vma)
-{
+{   
+    spin_lock(&dev_lock);
 	unsigned long size = (unsigned long)(vma->vm_end - vma->vm_start);
 	unsigned long page = vmalloc_to_pfn(user_view);
 	if (size > PAGE_SIZE)
@@ -285,7 +291,7 @@ static int mm_mmap(struct file *filp, struct vm_area_struct *vma)
 	vma->vm_page_prot = PAGE_READONLY;
 	if (remap_pfn_range(vma, vma->vm_start, page, size, vma->vm_page_prot))
 		return -EAGAIN;
-
+    spin_unlock(&dev_lock);
 	return 0;
 }
 
@@ -321,6 +327,8 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 	char targetBuf[8];
 	size_t copyLn = 8;
 	pr_info("mm_ctl_write all variables intialized and started\n");
+
+    spin_lock(&dev_lock);
 	if (count < sizeof(targetBuf))
 		copyLn = count;
 
@@ -365,7 +373,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 	}
 
 	pr_err("Invalid argument\n");
-
+    spin_unlock(&dev_lock);
 	return -EINVAL;
 }
 
