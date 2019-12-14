@@ -54,6 +54,7 @@ static bool game_active;
 
 size_t scnWrite = 0;
 
+unsigned long flags;
 /** code that player is trying to guess */
 static int target_code[NUM_PEGS];
 
@@ -289,8 +290,11 @@ static int mm_mmap(struct file *filp, struct vm_area_struct *vma)
     }
 	vma->vm_pgoff = 0;
 	vma->vm_page_prot = PAGE_READONLY;
+    spin_lock_irqsave(&mLock, flags);
 	if (remap_pfn_range(vma, vma->vm_start, page, size, vma->vm_page_prot))
+        spin_unlock_irqrestore(&mLock, flags);
         return -EAGAIN;
+    spin_unlock_irqrestore(&mLock, flags);
 	return 0;
 }
 
