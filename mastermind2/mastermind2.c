@@ -289,11 +289,8 @@ static int mm_mmap(struct file *filp, struct vm_area_struct *vma)
     }
 	vma->vm_pgoff = 0;
 	vma->vm_page_prot = PAGE_READONLY;
-    spin_lock(&dev_lock);
 	if (remap_pfn_range(vma, vma->vm_start, page, size, vma->vm_page_prot))
-        spin_unlock(&dev_lock);
         return -EAGAIN;
-    spin_unlock(&dev_lock);
 	return 0;
 }
 
