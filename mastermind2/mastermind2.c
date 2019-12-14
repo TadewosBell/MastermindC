@@ -323,8 +323,10 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 {
 	char start[5] = { 's', 't', 'a', 'r', 't' };
 	char quit[] = { 'q', 'u', 'i', 't' };
+    char color[] = { 'c','o','l','o','r','s'};
 	char clearRes[] = { 'B', '-', 'W', '-' };
 	char targetBuf[8];
+    int colorChoice;
 	size_t copyLn = 8;
 	pr_info("mm_ctl_write all variables intialized and started\n");
 
@@ -364,8 +366,10 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 		game_active = false;
         spin_unlock(&dev_lock);
 		return count;
-	}
-
+    } else if(strncmp(targetBuf, color, 6) == 0){
+        colorChoice = charToInt(targetBuf[7]);
+        pr_info("color: %d \n", colorChoice);
+    }
 	pr_err("Invalid argument\n");
 	return -EINVAL;
 }
