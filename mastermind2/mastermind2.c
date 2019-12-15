@@ -60,6 +60,8 @@ size_t scnWrite = 0;
 
 unsigned long flags;
 
+int *irq_cookie;
+
 static int num_colors = 6;
 /** code that player is trying to guess */
 static int target_code[NUM_PEGS];
@@ -531,7 +533,7 @@ static int mastermind_probe(struct platform_device *pdev)
 	/* Merge the contents of your original mastermind_init() here. */
 	/* Part 1: YOUR CODE HERE */
     int retval;
-	int *dev;
+
 	pr_info("Initializing the game.\n");
 	user_view = vmalloc(PAGE_SIZE);
 	if (!user_view) {
@@ -563,7 +565,7 @@ static int mastermind_probe(struct platform_device *pdev)
 	
 	dev = kmalloc(sizeof(target_code), GFP_ATOMIC);
 
-    retval = request_threaded_irq(CS421NET_IRQ,cs421net_top,cs421net_bottom,IRQF_SHARED,"mstr",dev);
+    retval = request_threaded_irq(CS421NET_IRQ,cs421net_top,cs421net_bottom,IRQF_SHARED,"mstr",irq_cookie);
     if (retval < 0) {
 		pr_err("Could not register Interrupt handler\n");
         goto failedToRegisterHandler;
@@ -597,7 +599,7 @@ static int mastermind_remove(struct platform_device *pdev)
 	/* Part 1: YOUR CODE HERE */
     pr_info("Freeing resources.\n");
 	vfree(user_view);
-    free_irq(CS421NET_IRQ, NULL);
+    free_irq(CS421NET_IRQ, irq_cookie);
 	/* YOUR CODE HERE */
 	misc_deregister(&mm_dev);
 	misc_deregister(&mm_ctl_dev);
