@@ -503,8 +503,8 @@ static irqreturn_t cs421net_bottom(int irq, void *cookie)
 	if(ret == -1){
 		pr_info("numbers are past color range");
 	}
-	kfree(data);
 	pr_info("cooke first num: %c\n", *data);
+	kfree(data);
 
 	return IRQ_HANDLED;
 }
