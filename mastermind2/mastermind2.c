@@ -447,6 +447,18 @@ static irqreturn_t cs421net_top(int irq, void *cookie)
 	return IRQ_WAKE_THREAD;
 }
 
+int validate_data(char *data){
+
+	for(data = 0; *data != NULL; data++){
+		if(charToInt(data) > num_colors || charToInt(data) < 2){
+			pr_info("numbers too big\n");
+			return -1;
+		}
+	}
+
+	return 1;
+}
+
 /**
  * cs421net_bottom() - bottom-half to CS421Net ISR
  * @irq: IRQ that was invoked (ignore)
@@ -480,9 +492,16 @@ static irqreturn_t cs421net_bottom(int irq, void *cookie)
 	/* Part 4: YOUR CODE HERE */
 
 	pr_info("This is bottom half\n");
+	int ret;
 	long unsigned int data_size = 4;
 	long unsigned int * const dataSize = &data_size;
 	char *data = cs421net_get_data(dataSize);
+
+	ret = validate_data(data);
+	if(ret == -1){
+		pr_info("numbers are past color range");
+	}
+	
 	pr_info("cooke first num: %c\n", *data);
 
 	return IRQ_HANDLED;
