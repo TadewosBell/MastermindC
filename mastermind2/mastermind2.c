@@ -52,15 +52,15 @@
 /** true if user is in the middle of a game */
 struct mm_game
 {
-	static bool game_active;
+	bool game_active;
 	/** tracks number of guesses user has made */
-	static unsigned num_guesses;
+	unsigned num_guesses;
 	/** result of most recent user guess */
-	static char last_result[4];
+	char last_result[4];
 	/** code that player is trying to guess */
-	static int target_code[NUM_PEGS];
+	int target_code[NUM_PEGS];
 	/** buffer that records all of user's guesses and their results */
-	static char *user_view;
+	char *user_view;
 };
 
 struct mm_game *global_game = kmalloc(sizeof(struct mm_game));;
