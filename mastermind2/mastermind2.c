@@ -564,7 +564,7 @@ static int mastermind_probe(struct platform_device *pdev)
 
 	
 	irq_cookie = kmalloc(sizeof(target_code), GFP_ATOMIC);
-
+	cs421net_enable();
     retval = request_threaded_irq(CS421NET_IRQ,cs421net_top,cs421net_bottom,IRQF_SHARED,"mstr",irq_cookie);
     if (retval < 0) {
 		pr_err("Could not register Interrupt handler\n");
@@ -604,6 +604,7 @@ static int mastermind_remove(struct platform_device *pdev)
 	misc_deregister(&mm_dev);
 	misc_deregister(&mm_ctl_dev);
 	device_remove_file(&pdev->dev, &dev_attr_stats);
+	cs421net_disable();
 	return 0;
 }
 
