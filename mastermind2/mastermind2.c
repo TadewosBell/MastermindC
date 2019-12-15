@@ -44,7 +44,7 @@
 #include <linux/uidgid.h>
 #include <linux/vmalloc.h>
 #include <linux/spinlock.h>
-#include <stdint.h>
+#include "stdint.h"
 #include "nf_cs421net.h"
 
 #define NUM_PEGS 4
@@ -105,7 +105,7 @@ static struct mm_game *mm_find_game(kuid_t uid){
 		return -ENOMEM;
 	game->id = uid;
 	game->user_view = vmalloc(PAGE_SIZE);
-	list_add(&game->list, &todo_list);
+	list_add(&game->list, &global_game);
 	return 0;
 
 }
