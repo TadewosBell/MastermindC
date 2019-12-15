@@ -426,7 +426,8 @@ static struct miscdevice mm_ctl_dev = {
 };
 
 static irqreturn_t validate_packet(void *cookie){
-	pr_info("This is validate data");
+	pr_info("This is validate data\n");
+	pr_info("cooke first num: %p\n", (cookie[0]));
 	return IRQ_WAKE_THREAD;
 }
 
@@ -449,7 +450,7 @@ static irqreturn_t cs421net_top(int irq, void *cookie)
 	}
 	ret = validate_packet(cookie);
 
-	pr_info("This is top half");
+	pr_info("This is top half\n");
 	return ret;
 }
 
@@ -484,7 +485,7 @@ static irqreturn_t cs421net_top(int irq, void *cookie)
 static irqreturn_t cs421net_bottom(int irq, void *cookie)
 {
 	/* Part 4: YOUR CODE HERE */
-	pr_info("This is bottom half");
+	pr_info("This is bottom half\n");
 
 	return IRQ_HANDLED;
 }
