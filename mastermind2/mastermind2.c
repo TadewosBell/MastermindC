@@ -425,13 +425,6 @@ static struct miscdevice mm_ctl_dev = {
 	.mode = 0666,
 };
 
-static irqreturn_t validate_packet(void *cookie){
-	pr_info("This is validate data\n");
-	char *interrupt_packet = cookie;
-	pr_info("cooke first num: %c\n", *interrupt_packet);
-	return IRQ_WAKE_THREAD;
-}
-
 /**
  * cs421net_top() - top-half of CS421Net ISR
  * @irq: IRQ that was invoked (ignored)
@@ -449,10 +442,9 @@ static irqreturn_t cs421net_top(int irq, void *cookie)
 	if(irq != 6){
 		return IRQ_NONE;
 	}
-	ret = validate_packet(cookie);
 
 	pr_info("This is top half\n");
-	return ret;
+	return IRQ_WAKE_THREAD;
 }
 
 /**
@@ -486,7 +478,10 @@ static irqreturn_t cs421net_top(int irq, void *cookie)
 static irqreturn_t cs421net_bottom(int irq, void *cookie)
 {
 	/* Part 4: YOUR CODE HERE */
+
 	pr_info("This is bottom half\n");
+	char *data = cs421net_get_data(4);
+	pr_info("cooke first num: %c\n", *data);
 
 	return IRQ_HANDLED;
 }
