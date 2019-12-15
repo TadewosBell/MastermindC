@@ -518,7 +518,9 @@ static irqreturn_t cs421net_bottom(int irq, void *cookie)
 		spin_lock(&dev_lock);
 		num_invalid_changes += 1;
 		spin_unlock(&dev_lock);
+		kfree(data);
 		pr_info("incremented invalid changes\n");
+		return IRQ_HANDLED;
 	}
 	pr_info("cooke first num: %c\n", *data);
 
