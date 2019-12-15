@@ -88,14 +88,16 @@ static int num_colors = 6;
 static DEFINE_SPINLOCK(dev_lock);
 
 
+
 static struct mm_game *mm_find_game(kuid_t uid){
 
-	struct mm_game *game;
+	struct mm_game *game, *ret;
 	
 	list_for_each_entry(game, &global_game, list){
 		pr_info("in list iterating");
 		if(uid_eq(game->id, uid)){
-			return game;
+			ret = container_of(game->list,struct mm_game,list);
+			return ret;
 		}
 	}
 
@@ -110,8 +112,8 @@ static struct mm_game *mm_find_game(kuid_t uid){
 }
 
 static void mm_free_games(void){
-	struct mm_game *game;
-	list_for_each_entry(game, &global_game, list){
+	struct mm_game *game, *tmp;
+	list_for_each_entry_safe(game,tmp, &global_game, list){
 		vfree(game->user_view);
 		kfree(game);
 	}
