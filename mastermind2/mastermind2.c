@@ -548,7 +548,7 @@ static int mastermind_probe(struct platform_device *pdev)
 		pr_err("Could not register Interrupt handler\n");
         goto failedToRegisterHandler;
 	}
-	return retval;
+	return 0;
 
 failedToRegisterHandler:
     pr_err("Could not register Interrupt handler\n"); 
