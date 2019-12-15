@@ -448,9 +448,10 @@ static irqreturn_t cs421net_top(int irq, void *cookie)
 }
 
 int validate_data(char *data){
+	int i;
 
-	for(data = 0; *data != NULL; data++){
-		if(charToInt(data) > num_colors || charToInt(data) < 2){
+	for(i = 0; i < 4; i++){
+		if(charToInt(data[i]) > num_colors || charToInt(data[i]) < 2){
 			pr_info("numbers too big\n");
 			return -1;
 		}
