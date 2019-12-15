@@ -44,6 +44,7 @@
 #include <linux/uidgid.h>
 #include <linux/vmalloc.h>
 #include <linux/spinlock.h>
+#include <stdint.h>
 #include "nf_cs421net.h"
 
 #define NUM_PEGS 4
@@ -93,7 +94,7 @@ static struct mm_game *mm_find_game(kuid_t uid){
 	struct mm_game *game;
 	
 	list_for_each_entry(game, &global_game, list){
-		pr_info("pid = game :%jd | process: %jd\n", (intmax_t) game->id, (intmax_t) uid);
+		pr_info("pid = game :%jd | process: %jd\n", (intmax_t)game->id, (intmax_t)uid);
 		if(uid_eq(game->id, uid)){
 			return game;
 		}
@@ -111,15 +112,9 @@ static struct mm_game *mm_find_game(kuid_t uid){
 
 static void mm_free_games(void){
 	struct mm_game *game;
-	if(global_game != NULL){
-		list_for_each_entry(game, &global_game, list){
-			pr_info("pid = game :%jd | process: %jd\n", (intmax_t) game->id, (intmax_t) uid);
-			if(uid_eq(game->id, uid)){
-				return game;
-			}
-			vfree(global_game->user_view);
-			kfree(game);
-		}
+	list_for_each_entry(game, &global_game, list){
+		vfree(game->user_view);
+		kfree(game);
 	}
 }
 
