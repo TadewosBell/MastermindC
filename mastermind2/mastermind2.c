@@ -480,7 +480,7 @@ static irqreturn_t cs421net_bottom(int irq, void *cookie)
 	/* Part 4: YOUR CODE HERE */
 
 	pr_info("This is bottom half\n");
-	int data_size = 4;
+	long unsigned int data_size = 4;
 	long unsigned int * const dataSize = &data_size;
 	char *data = cs421net_get_data(dataSize);
 	pr_info("cooke first num: %c\n", *data);
