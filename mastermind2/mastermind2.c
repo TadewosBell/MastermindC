@@ -543,7 +543,7 @@ static int mastermind_probe(struct platform_device *pdev)
         goto failedDeviceCreate;
 	}
 
-    retval = request_threaded_irq(CS421NET_IRQ,cs421net_top,cs421net_bottom,0,'mstr',NULL);
+    ///retval = request_threaded_irq(CS421NET_IRQ,cs421net_top,cs421net_bottom,0,'mstr',NULL);
     if (retval < 0) {
 		pr_err("Could not register Interrupt handler\n");
         goto failedToRegisterHandler;
@@ -577,7 +577,7 @@ static int mastermind_remove(struct platform_device *pdev)
 	/* Part 1: YOUR CODE HERE */
     pr_info("Freeing resources.\n");
 	vfree(user_view);
-    free_irq(CS421NET_IRQ, NULL);
+    //free_irq(CS421NET_IRQ, NULL);
 	/* YOUR CODE HERE */
 	misc_deregister(&mm_dev);
 	misc_deregister(&mm_ctl_dev);
