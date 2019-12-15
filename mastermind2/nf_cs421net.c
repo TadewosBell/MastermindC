@@ -28,7 +28,7 @@
 /* defined in arch/x86/kernel/irq.c */
 extern int trigger_irq(unsigned);
 
-#define CS421NET_IRQ 6
+#define CS421NET_IRQ 3
 static DEFINE_SPINLOCK(lock);
 static DECLARE_COMPLETION(retrieved);
 static bool cs421net_enabled;
