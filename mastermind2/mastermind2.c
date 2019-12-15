@@ -93,6 +93,7 @@ static struct mm_game *mm_find_game(kuid_t uid){
 	struct mm_game *game;
 	
 	list_for_each_entry(game, &global_game, list){
+		pr_info("in list iterating");
 		if(uid_eq(game->id, uid)){
 			return game;
 		}
@@ -257,7 +258,7 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 {
 	/* FIXME */
 	unsigned right, rightVal;
-	int i, j;
+	int i;
 	char blackPeg, whitePeg;
 	char targetBuf[NUM_PEGS];
 	int guess[NUM_PEGS];
