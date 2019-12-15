@@ -11,7 +11,7 @@
 #ifndef NF_CS421NET_H
 #define NF_CS421NET_H
 
-#define CS421NET_IRQ 3
+#define CS421NET_IRQ 6
 void cs421net_enable(void);
 void cs421net_disable(void);
 char *cs421net_get_data(size_t * const);
