@@ -50,7 +50,8 @@
 #define NUM_COLORS 6
 
 /** true if user is in the middle of a game */
-struct mm_game {
+struct mm_game
+{
 	static bool game_active;
 	/** tracks number of guesses user has made */
 	static unsigned num_guesses;
@@ -60,7 +61,7 @@ struct mm_game {
 	static int target_code[NUM_PEGS];
 	/** buffer that records all of user's guesses and their results */
 	static char *user_view;
-}
+};
 
 struct mm_game *global_game = kmalloc(sizeof(struct mm_game));;
 
