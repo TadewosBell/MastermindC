@@ -451,7 +451,7 @@ int validate_data(char *data){
 	int i;
 
 	for(i = 0; i < 4; i++){
-		pr_info("num first num: %c\n", *data[i]);
+		pr_info("num first num: %c\n", data[i]);
 		if(charToInt(data[i]) > num_colors || charToInt(data[i]) < 2){
 			pr_info("numbers too big\n");
 			return -1;
