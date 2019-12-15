@@ -61,6 +61,8 @@ struct mm_game
 	int target_code[NUM_PEGS];
 	/** buffer that records all of user's guesses and their results */
 	char *user_view;
+
+	kuid_t id;
 };
 
 static struct mm_game *global_game;
@@ -84,7 +86,7 @@ static int num_colors = 6;
 static DEFINE_SPINLOCK(dev_lock);
 
 
-static struct mm_game *mm_find_game(int uid){
+static struct mm_game *mm_find_game(kuid_t uid){
 
 	if(global_game == NULL){
 		global_game = kmalloc(sizeof(struct mm_game),GFP_KERNEL);
@@ -191,7 +193,8 @@ static ssize_t mm_read(struct file *filp, char __user * ubuf, size_t count,
 {
 	/* FIXME */
 	char fourQ[] = { '?', '?', '?', '?' };
-	struct mm_game *game = mm_find_game(1);
+	kuid_t userID = current_uid();
+	struct mm_game *game = mm_find_game(userID);
 	if (game->game_active == false) {
         spin_lock(&dev_lock);
 		memcpy(game->last_result, fourQ, sizeof(fourQ));
@@ -244,7 +247,8 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 	char blackPeg, whitePeg;
 	char targetBuf[NUM_PEGS];
 	int guess[NUM_PEGS];
-	struct mm_game *game = mm_find_game(1);
+	kuid_t userID = current_uid();
+	struct mm_game *game = mm_find_game(userID);
     
 	if (game->game_active == false || count < NUM_PEGS) {
 		return -EINVAL;
@@ -318,7 +322,8 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 static int mm_mmap(struct file *filp, struct vm_area_struct *vma)
 {   
 	unsigned long size = (unsigned long)(vma->vm_end - vma->vm_start);
-	struct mm_game *game = mm_find_game(1);
+	kuid_t userID = current_uid();
+	struct mm_game *game = mm_find_game(userID);
 	spin_lock(&dev_lock);
 	unsigned long page = vmalloc_to_pfn(game->user_view);
 	spin_unlock(&dev_lock);
@@ -365,7 +370,8 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 	char targetBuf[8];
     int colorChoice;
 	size_t copyLn = 8;
-	struct mm_game *game = mm_find_game(1);
+	kuid_t userID = current_uid();
+	struct mm_game *game = mm_find_game(userID);
 	
 	pr_info("mm_ctl_write all variables intialized and started\n");
 
@@ -491,7 +497,8 @@ int validate_data(char *data){
 
 int set_code(char *data){
 	int i;
-	struct mm_game *game = mm_find_game(1);
+	kuid_t userID = current_uid();
+	struct mm_game *game = mm_find_game(userID);
 	for(i = 0; i < 4; i++){
 		game->target_code[i] = charToInt(data[i]);
 	}
@@ -604,7 +611,8 @@ static int mastermind_probe(struct platform_device *pdev)
     int retval;
 
 	pr_info("Initializing the game.\n");
-	global_game = mm_find_game(1);
+	kuid_t userID = current_uid();
+	global_game = mm_find_game(userID);
 
 	if (!global_game->user_view) {
 		pr_err("Could not allocate memory\n");
