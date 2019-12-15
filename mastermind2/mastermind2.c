@@ -193,7 +193,7 @@ static ssize_t mm_read(struct file *filp, char __user * ubuf, size_t count,
 {
 	/* FIXME */
 	char fourQ[] = { '?', '?', '?', '?' };
-	kuid_t userID = current_uid();
+	kuid_t userID = (kuid_t)current_uid();
 	struct mm_game *game = mm_find_game(userID);
 	if (game->game_active == false) {
         spin_lock(&dev_lock);
