@@ -110,9 +110,16 @@ static struct mm_game *mm_find_game(kuid_t uid){
 }
 
 static void mm_free_games(void){
+	struct mm_game *game;
 	if(global_game != NULL){
-		vfree(global_game->user_view);
-		kfree(global_game);
+		list_for_each_entry(game, &global_game, list){
+			pr_info("pid = game :%jd | process: %jd\n", (intmax_t) game->id, (intmax_t) uid);
+			if(uid_eq(game->id, uid)){
+				return game;
+			}
+			vfree(global_game->user_view);
+			kfree(game);
+		}
 	}
 }
 
@@ -623,15 +630,14 @@ static int mastermind_probe(struct platform_device *pdev)
 	/* Merge the contents of your original mastermind_init() here. */
 	/* Part 1: YOUR CODE HERE */
     int retval;
-
+	char cookie[4];
 	pr_info("Initializing the game.\n");
 	kuid_t userID = current_uid();
-	global_game = mm_find_game(userID);
 
-	if (!global_game->user_view) {
-		pr_err("Could not allocate memory\n");
-		return -ENOMEM;
-	}
+	// if (!global_game->user_view) {
+	// 	pr_err("Could not allocate memory\n");
+	// 	return -ENOMEM;
+	// }
 
 	/* YOUR CODE HERE */
 	retval = misc_register(&mm_dev);
@@ -654,7 +660,7 @@ static int mastermind_probe(struct platform_device *pdev)
         goto failedDeviceCreate;
 	}
 
-	irq_cookie = kmalloc(sizeof(global_game->last_result), GFP_KERNEL);
+	irq_cookie = kmalloc(sizeof(cookie), GFP_KERNEL);
 	cs421net_enable();
     retval = request_threaded_irq(CS421NET_IRQ,cs421net_top,cs421net_bottom,IRQF_SHARED,"mstr",irq_cookie);
     if (retval < 0) {
