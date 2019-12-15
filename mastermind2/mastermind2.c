@@ -63,7 +63,7 @@ struct mm_game
 	char *user_view;
 };
 
-struct mm_game *global_game = kmalloc(sizeof(struct mm_game),GFP_KERNEL);
+static struct mm_game *global_game;
 
 static int num_games = 0;
 
@@ -592,6 +592,7 @@ static int mastermind_probe(struct platform_device *pdev)
     int retval;
 
 	pr_info("Initializing the game.\n");
+	global_game = kmalloc(sizeof(struct mm_game),GFP_KERNEL);
 	global_game->user_view = vmalloc(PAGE_SIZE);
 	if (!user_view) {
 		pr_err("Could not allocate memory\n");
