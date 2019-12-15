@@ -180,7 +180,7 @@ static ssize_t mm_read(struct file *filp, char __user * ubuf, size_t count,
 	/* FIXME */
 	char fourQ[] = { '?', '?', '?', '?' };
 	struct mm_game *game = mm_find_game(1);
-	if (game_active == false) {
+	if (game->game_active == false) {
         spin_lock(&dev_lock);
 		memcpy(game->last_result, fourQ, sizeof(fourQ));
         spin_unlock(&dev_lock);
@@ -307,9 +307,9 @@ static int mm_mmap(struct file *filp, struct vm_area_struct *vma)
 {   
 	unsigned long size = (unsigned long)(vma->vm_end - vma->vm_start);
 	struct mm_game *game = mm_find_game(1);
-	spin_lock(&dev);
+	spin_lock(&dev_lock);
 	unsigned long page = vmalloc_to_pfn(game->user_view);
-	spin_unlock(&dev);
+	spin_unlock(&dev_lock);
 	if (size > PAGE_SIZE){
 		return -EIO;
     }
