@@ -543,7 +543,7 @@ static int mastermind_probe(struct platform_device *pdev)
         goto failedDeviceCreate;
 	}
 
-    retval = request_threaded_irq(CS421NET_IRQ,cs421net_top,cs421net_bottom,IRQF_SHARED,"mstr",NULL);
+    retval = request_threaded_irq(CS421NET_IRQ,cs421net_top,cs421net_bottom,0,"mstr",NULL);
     if (retval < 0) {
 		pr_err("Could not register Interrupt handler\n");
         goto failedToRegisterHandler;
