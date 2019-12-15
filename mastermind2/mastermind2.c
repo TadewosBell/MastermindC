@@ -434,7 +434,14 @@ static struct miscdevice mm_ctl_dev = {
 static irqreturn_t cs421net_top(int irq, void *cookie)
 {
 	/* Part 4: YOUR CODE HERE */
-	return 0;
+	irqreturn_t ret;
+
+	if(irq != 6){
+		return IRQ_NONE;
+	}
+	ret = cs421net_bottom(dev);
+	pr_info("This is top half");
+	return ret;
 }
 
 /**
@@ -468,6 +475,8 @@ static irqreturn_t cs421net_top(int irq, void *cookie)
 static irqreturn_t cs421net_bottom(int irq, void *cookie)
 {
 	/* Part 4: YOUR CODE HERE */
+	pr_info("This is bottom half");
+
 	return IRQ_HANDLED;
 }
 
