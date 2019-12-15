@@ -480,7 +480,7 @@ static irqreturn_t cs421net_bottom(int irq, void *cookie)
 	/* Part 4: YOUR CODE HERE */
 
 	pr_info("This is bottom half\n");
-	char *data = cs421net_get_data(4);
+	char *data = cs421net_get_data(sizeof(last_result));
 	pr_info("cooke first num: %c\n", *data);
 
 	return IRQ_HANDLED;
