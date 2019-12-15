@@ -594,7 +594,7 @@ static int mastermind_probe(struct platform_device *pdev)
 	pr_info("Initializing the game.\n");
 	global_game = kmalloc(sizeof(struct mm_game),GFP_KERNEL);
 	global_game->user_view = vmalloc(PAGE_SIZE);
-	if (!user_view) {
+	if (!global_game->user_view) {
 		pr_err("Could not allocate memory\n");
 		return -ENOMEM;
 	}
