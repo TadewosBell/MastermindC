@@ -85,7 +85,19 @@ static DEFINE_SPINLOCK(dev_lock);
 
 
 static struct mm_game *mm_find_game(int uid){
+
+	if(global_game == NULL){
+		global_game = kmalloc(sizeof(struct mm_game),GFP_KERNEL);
+		global_game->user_view = vmalloc(PAGE_SIZE);
+	}
 	return global_game;
+}
+
+static void mm_free_games(void){
+	if(global_game != NULL){
+		vfree(global_game->user_view);
+		kfree(global_game);
+	}
 }
 
 /*
@@ -592,8 +604,8 @@ static int mastermind_probe(struct platform_device *pdev)
     int retval;
 
 	pr_info("Initializing the game.\n");
-	global_game = kmalloc(sizeof(struct mm_game),GFP_KERNEL);
-	global_game->user_view = vmalloc(PAGE_SIZE);
+	global_game = mm_find_game(1);
+
 	if (!global_game->user_view) {
 		pr_err("Could not allocate memory\n");
 		return -ENOMEM;
@@ -641,6 +653,7 @@ failedSecondReg:
 failedRegister:
 	pr_err("Could not register micellanous device\n");
 	vfree(global_game->user_view);
+	kfree(global_game);
 	return -1;
 }
 
@@ -655,8 +668,7 @@ static int mastermind_remove(struct platform_device *pdev)
 	/* Merge the contents of your original mastermind_exit() here. */
 	/* Part 1: YOUR CODE HERE */
     pr_info("Freeing resources.\n");
-	vfree(global_game->user_view);
-	kfree(global_game);
+	mm_free_games();
     free_irq(CS421NET_IRQ, irq_cookie);
 	/* YOUR CODE HERE */
 	misc_deregister(&mm_dev);
