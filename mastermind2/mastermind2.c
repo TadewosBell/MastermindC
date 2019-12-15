@@ -50,7 +50,19 @@
 #define NUM_COLORS 6
 
 /** true if user is in the middle of a game */
-static bool game_active;
+struct mm_game {
+	static bool game_active;
+	/** tracks number of guesses user has made */
+	static unsigned num_guesses;
+	/** result of most recent user guess */
+	static char last_result[4];
+	/** code that player is trying to guess */
+	static int target_code[NUM_PEGS];
+	/** buffer that records all of user's guesses and their results */
+	static char *user_view;
+}
+
+struct mm_game *global_game = kmalloc(sizeof(struct mm_game));;
 
 static int num_games = 0;
 
@@ -67,19 +79,13 @@ static int num_changes = 0;
 static int num_invalid_changes = 0;
 
 static int num_colors = 6;
-/** code that player is trying to guess */
-static int target_code[NUM_PEGS];
-
-/** tracks number of guesses user has made */
-static unsigned num_guesses;
-
-/** result of most recent user guess */
-static char last_result[4];
-
-/** buffer that records all of user's guesses and their results */
-static char *user_view;
 
 static DEFINE_SPINLOCK(dev_lock);
+
+
+static struct mm_game *mm_find_game(int uid){
+	return global_game;
+}
 
 /*
 * charToInt
@@ -172,22 +178,22 @@ static ssize_t mm_read(struct file *filp, char __user * ubuf, size_t count,
 {
 	/* FIXME */
 	char fourQ[] = { '?', '?', '?', '?' };
-
+	struct mm_game *game = mm_find_game(1);
 	if (game_active == false) {
         spin_lock(&dev_lock);
-		memcpy(last_result, fourQ, sizeof(fourQ));
+		memcpy(game->last_result, fourQ, sizeof(fourQ));
         spin_unlock(&dev_lock);
 		pr_info("game active is false\n");
 	}
-	if (*ppos >= sizeof(last_result)) {
+	if (*ppos >= sizeof(game->last_result)) {
 		pr_info("ppos was greater\n");
 		return 0;
 	}
-	if (*ppos + count > sizeof(last_result)) {
+	if (*ppos + count > sizeof(game->last_result)) {
 		pr_info("ppos + count was greater\n");
-		count = sizeof(last_result) - *ppos;
+		count = sizeof(game->last_result) - *ppos;
 	}
-	if (copy_to_user(ubuf, last_result + *ppos, count) != 0) {
+	if (copy_to_user(ubuf, game->last_result + *ppos, count) != 0) {
 		pr_info("ppos + count was greater\n");
 		return -EFAULT;
 	}
@@ -225,14 +231,14 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 	char blackPeg, whitePeg;
 	char targetBuf[NUM_PEGS];
 	int guess[NUM_PEGS];
-
+	struct mm_game *game = mm_find_game(1);
     
-	if (game_active == false || count < NUM_PEGS) {
+	if (game->game_active == false || count < NUM_PEGS) {
 		return -EINVAL;
 	}
 	//increment the number of guesses made if entry is valid
     spin_lock(&dev_lock);
-	num_guesses = num_guesses + 1;
+	game->num_guesses = game->num_guesses + 1;
     spin_unlock(&dev_lock);
 
 	//copy entry to buffer
@@ -253,7 +259,7 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 	}
 
 	//get number of black and white pegs
-	mm_num_pegs(target_code, guess, &right, &rightVal);
+	mm_num_pegs(game->target_code, guess, &right, &rightVal);
 
 	//convert b and w values to string then store
 	blackPeg = right + '0';
@@ -263,21 +269,21 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 	pr_info("white Peg: %c\n", whitePeg);
 
     spin_lock(&dev_lock);
-	last_result[1] = blackPeg;
-	last_result[3] = whitePeg;
+	game->last_result[1] = blackPeg;
+	game->last_result[3] = whitePeg;
 	scnWrite +=
-	    scnprintf(user_view + scnWrite, PAGE_SIZE - scnWrite,
-		      "Guess %d: %c%c%c%c | %c%c%c%c \n", num_guesses,
+	    scnprintf(game->user_view + scnWrite, PAGE_SIZE - scnWrite,
+		      "Guess %d: %c%c%c%c | %c%c%c%c \n", game->num_guesses,
 		      targetBuf[0], targetBuf[1], targetBuf[2], targetBuf[3],
-		      last_result[0], last_result[1], last_result[2],
-		      last_result[3]);
+		      game->last_result[0], game->last_result[1], game->last_result[2],
+		      game->last_result[3]);
     if(charToInt(blackPeg) == 4){
-        scnWrite += scnprintf(user_view + scnWrite,PAGE_SIZE - scnWrite,"You Won the game! \n");
-        game_active = false;
+        scnWrite += scnprintf(game->user_view + scnWrite,PAGE_SIZE - scnWrite,"You Won the game! \n");
+        game->game_active = false;
     }
     spin_unlock(&dev_lock);
 
-	pr_info("history %s", user_view);
+	pr_info("history %s", game->user_view);
 	return count;
 }
 
@@ -299,7 +305,10 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 static int mm_mmap(struct file *filp, struct vm_area_struct *vma)
 {   
 	unsigned long size = (unsigned long)(vma->vm_end - vma->vm_start);
-	unsigned long page = vmalloc_to_pfn(user_view);
+	struct mm_game *game = mm_find_game(1);
+	spin_lock(&dev);
+	unsigned long page = vmalloc_to_pfn(game->user_view);
+	spin_unlock(&dev);
 	if (size > PAGE_SIZE){
 		return -EIO;
     }
@@ -343,6 +352,8 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 	char targetBuf[8];
     int colorChoice;
 	size_t copyLn = 8;
+	struct mm_game *game = mm_find_game(1);
+	
 	pr_info("mm_ctl_write all variables intialized and started\n");
 
 	if (count < sizeof(targetBuf))
@@ -357,20 +368,20 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 	if (strncmp(targetBuf, start, count) == 0) {
 		//set the target code to 4211
         spin_lock(&dev_lock);
-		target_code[0] = 4;
-		target_code[1] = 2;
-		target_code[2] = 1;
-		target_code[3] = 1;
+		game->target_code[0] = 4;
+		game->target_code[1] = 2;
+		game->target_code[2] = 1;
+		game->target_code[3] = 1;
 		pr_info("start\n");
 		scnWrite = 0;
 		//set number of guesses to 0
-		num_guesses = 0;
+		game->num_guesses = 0;
 		//set the user buffer to null
-		memset(user_view, 0, PAGE_SIZE);
+		memset(game->user_view, 0, PAGE_SIZE);
 		pr_info("memset done\n");
-		game_active = true;
+		game->game_active = true;
         num_games += 1;
-		memcpy(last_result, clearRes, 4);
+		memcpy(game->last_result, clearRes, 4);
 		pr_info("copy to user done\n");
         spin_unlock(&dev_lock);
 		return count;
@@ -379,7 +390,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 
 		pr_info("in quit if\n");
         spin_lock(&dev_lock);
-		game_active = false;
+		game->game_active = false;
         num_games -= 1;
         spin_unlock(&dev_lock);
 		return count;
@@ -467,9 +478,9 @@ int validate_data(char *data){
 
 int set_code(char *data){
 	int i;
-
+	struct mm_game *game = mm_find_game(1);
 	for(i = 0; i < 4; i++){
-		target_code[i] = charToInt(data[i]);
+		game->target_code[i] = charToInt(data[i]);
 	}
 	return 1;
 }
@@ -580,7 +591,7 @@ static int mastermind_probe(struct platform_device *pdev)
     int retval;
 
 	pr_info("Initializing the game.\n");
-	user_view = vmalloc(PAGE_SIZE);
+	global_game->user_view = vmalloc(PAGE_SIZE);
 	if (!user_view) {
 		pr_err("Could not allocate memory\n");
 		return -ENOMEM;
@@ -607,8 +618,7 @@ static int mastermind_probe(struct platform_device *pdev)
         goto failedDeviceCreate;
 	}
 
-	
-	irq_cookie = kmalloc(sizeof(last_result), GFP_ATOMIC);
+	irq_cookie = kmalloc(sizeof(global_game->last_result), GFP_ATOMIC);
 	cs421net_enable();
     retval = request_threaded_irq(CS421NET_IRQ,cs421net_top,cs421net_bottom,IRQF_SHARED,"mstr",irq_cookie);
     if (retval < 0) {
@@ -628,7 +638,7 @@ failedSecondReg:
 	misc_deregister(&mm_dev);
 failedRegister:
 	pr_err("Could not register micellanous device\n");
-	vfree(user_view);
+	vfree(global_game->user_view);
 	return -1;
 }
 
@@ -643,7 +653,7 @@ static int mastermind_remove(struct platform_device *pdev)
 	/* Merge the contents of your original mastermind_exit() here. */
 	/* Part 1: YOUR CODE HERE */
     pr_info("Freeing resources.\n");
-	vfree(user_view);
+	vfree(global_game->user_view);
     free_irq(CS421NET_IRQ, irq_cookie);
 	/* YOUR CODE HERE */
 	misc_deregister(&mm_dev);
