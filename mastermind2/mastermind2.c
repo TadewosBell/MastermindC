@@ -60,7 +60,7 @@ size_t scnWrite = 0;
 
 unsigned long flags;
 
-int *irq_cookie;
+char irq_cookie[4];
 
 static int num_colors = 6;
 /** code that player is trying to guess */
@@ -427,7 +427,7 @@ static struct miscdevice mm_ctl_dev = {
 
 static irqreturn_t validate_packet(void *cookie){
 	pr_info("This is validate data\n");
-	int *interrupt_packet = cookie;
+	char interrupt_packet = cookie;
 	pr_info("cooke first num: %zu\n", sizeof(interrupt_packet));
 	return IRQ_WAKE_THREAD;
 }
@@ -565,7 +565,7 @@ static int mastermind_probe(struct platform_device *pdev)
 	}
 
 	
-	irq_cookie = kmalloc(sizeof(target_code), GFP_ATOMIC);
+	irq_cookie = kmalloc(sizeof(irq_cookie), GFP_ATOMIC);
 	cs421net_enable();
     retval = request_threaded_irq(CS421NET_IRQ,cs421net_top,cs421net_bottom,IRQF_SHARED,"mstr",irq_cookie);
     if (retval < 0) {
