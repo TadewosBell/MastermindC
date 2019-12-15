@@ -656,7 +656,7 @@ static int mastermind_remove(struct platform_device *pdev)
 	/* Part 1: YOUR CODE HERE */
     pr_info("Freeing resources.\n");
 	vfree(global_game->user_view);
-	vfree(global_game);
+	kfree(global_game);
     free_irq(CS421NET_IRQ, irq_cookie);
 	/* YOUR CODE HERE */
 	misc_deregister(&mm_dev);
