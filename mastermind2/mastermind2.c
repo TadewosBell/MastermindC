@@ -524,6 +524,7 @@ static int mastermind_probe(struct platform_device *pdev)
 	/* Merge the contents of your original mastermind_init() here. */
 	/* Part 1: YOUR CODE HERE */
     int retval;
+	int *dev;
 	pr_info("Initializing the game.\n");
 	user_view = vmalloc(PAGE_SIZE);
 	if (!user_view) {
@@ -552,7 +553,10 @@ static int mastermind_probe(struct platform_device *pdev)
         goto failedDeviceCreate;
 	}
 
-    retval = request_threaded_irq(CS421NET_IRQ,cs421net_top,cs421net_bottom,0,"mstr",NULL);
+	
+	dev = kmalloc(sizeof(target_code), GFP_ATOMIC);
+
+    retval = request_threaded_irq(CS421NET_IRQ,cs421net_top,cs421net_bottom,IRQF_SHARED,"mstr",dev);
     if (retval < 0) {
 		pr_err("Could not register Interrupt handler\n");
         goto failedToRegisterHandler;
