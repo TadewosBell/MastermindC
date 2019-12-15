@@ -563,7 +563,7 @@ static int mastermind_probe(struct platform_device *pdev)
 	}
 
 	
-	dev = kmalloc(sizeof(target_code), GFP_ATOMIC);
+	irq_cookie = kmalloc(sizeof(target_code), GFP_ATOMIC);
 
     retval = request_threaded_irq(CS421NET_IRQ,cs421net_top,cs421net_bottom,IRQF_SHARED,"mstr",irq_cookie);
     if (retval < 0) {
