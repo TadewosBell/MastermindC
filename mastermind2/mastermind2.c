@@ -427,8 +427,8 @@ static struct miscdevice mm_ctl_dev = {
 
 static irqreturn_t validate_packet(void *cookie){
 	pr_info("This is validate data\n");
-	char interrupt_packet = cookie;
-	pr_info("cooke first num: %zu\n", sizeof(interrupt_packet));
+	char *interrupt_packet = cookie;
+	pr_info("cooke first num: %c\n", *interrupt_packet);
 	return IRQ_WAKE_THREAD;
 }
 
