@@ -63,7 +63,7 @@ struct mm_game
 	char *user_view;
 };
 
-struct mm_game *global_game = kmalloc(sizeof(struct mm_game));;
+struct mm_game *global_game = kmalloc(sizeof(struct mm_game),GFP_KERNEL);
 
 static int num_games = 0;
 
@@ -619,7 +619,7 @@ static int mastermind_probe(struct platform_device *pdev)
         goto failedDeviceCreate;
 	}
 
-	irq_cookie = kmalloc(sizeof(global_game->last_result), GFP_ATOMIC);
+	irq_cookie = kmalloc(sizeof(global_game->last_result), GFP_KERNEL);
 	cs421net_enable();
     retval = request_threaded_irq(CS421NET_IRQ,cs421net_top,cs421net_bottom,IRQF_SHARED,"mstr",irq_cookie);
     if (retval < 0) {
