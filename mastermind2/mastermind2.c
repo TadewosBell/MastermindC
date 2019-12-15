@@ -633,7 +633,8 @@ static int mastermind_probe(struct platform_device *pdev)
 	char cookie[4];
 	pr_info("Initializing the game.\n");
 	kuid_t userID = current_uid();
-
+	struct mm_game *game;
+	game = mm_find_game(userID);
 	// if (!global_game->user_view) {
 	// 	pr_err("Could not allocate memory\n");
 	// 	return -ENOMEM;
@@ -680,8 +681,7 @@ failedSecondReg:
 	misc_deregister(&mm_dev);
 failedRegister:
 	pr_err("Could not register micellanous device\n");
-	vfree(global_game->user_view);
-	kfree(global_game);
+	mm_free_games();
 	return -1;
 }
 
