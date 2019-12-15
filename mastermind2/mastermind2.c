@@ -60,7 +60,11 @@ size_t scnWrite = 0;
 
 unsigned long flags;
 
-char *irq_cookie;
+static char *irq_cookie;
+
+static int num_changes = 0;
+
+static int num_invalid_changes = 0;
 
 static int num_colors = 6;
 /** code that player is trying to guess */
@@ -461,6 +465,16 @@ int validate_data(char *data){
 	return 1;
 }
 
+int set_code(char *data){
+	int i;
+
+	for(i = 0; i < 4; i++){
+		target_code[i] = charToInt(data[i]);
+	}
+	return 1;
+}
+
+
 /**
  * cs421net_bottom() - bottom-half to CS421Net ISR
  * @irq: IRQ that was invoked (ignore)
@@ -501,9 +515,18 @@ static irqreturn_t cs421net_bottom(int irq, void *cookie)
 
 	ret = validate_data(data);
 	if(ret == -1){
-		pr_info("numbers are past color range");
+		spin_lock(&dev_lock);
+		num_invalid_changes += 1;
+		spin_unlock(&dev_lock);
+		pr_info("incremented invalid changes\n");
 	}
 	pr_info("cooke first num: %c\n", *data);
+
+	spin_lock(&dev_lock);
+	num_changes += 1;
+	set_code(data);
+	pr_info("incremented valid changes\n");
+	spin_unlock(&dev_lock);
 	kfree(data);
 
 	return IRQ_HANDLED;
@@ -535,7 +558,7 @@ static ssize_t mm_stats_show(struct device *dev,
 			     struct device_attribute *attr, char *buf)
 {
     spin_lock(&dev_lock);
-    stat_write += scnprintf(buf + stat_write,PAGE_SIZE - stat_write,"CS421 Mastermind Stats\nNumber of colors: %d\nNumber of Active Games: %d\nNumber of Active Games: %d\n", num_colors, num_games,num_games_started);
+    stat_write += scnprintf(buf + stat_write,PAGE_SIZE - stat_write,"CS421 Mastermind Stats\nNumber of colors: %d\nNumber of Active Games: %d\nNumber of Active Games: %d\nNumber of times code was changed: %d\nNumber of invalid code change attempts: %d\n", num_colors, num_games,num_games_started,num_changes,num_invalid_changes);
 	spin_unlock(&dev_lock);
     return stat_write;
 }
