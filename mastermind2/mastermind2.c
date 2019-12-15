@@ -439,7 +439,7 @@ static irqreturn_t cs421net_top(int irq, void *cookie)
 	if(irq != 6){
 		return IRQ_NONE;
 	}
-	ret = cs421net_bottom(dev);
+	ret = cs421net_bottom(cookie);
 	pr_info("This is top half");
 	return ret;
 }
