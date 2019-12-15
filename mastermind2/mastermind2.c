@@ -52,6 +52,8 @@
 /** true if user is in the middle of a game */
 struct mm_game
 {
+	struct list_head list;
+
 	bool game_active;
 	/** tracks number of guesses user has made */
 	unsigned num_guesses;
@@ -65,7 +67,7 @@ struct mm_game
 	kuid_t id;
 };
 
-static struct mm_game *global_game;
+static LIST_HEAD(global_game);
 
 static int num_games = 0;
 
@@ -88,11 +90,23 @@ static DEFINE_SPINLOCK(dev_lock);
 
 static struct mm_game *mm_find_game(kuid_t uid){
 
-	if(global_game == NULL){
-		global_game = kmalloc(sizeof(struct mm_game),GFP_KERNEL);
-		global_game->user_view = vmalloc(PAGE_SIZE);
+	struct mm_game *game;
+	
+	list_for_each_entry(game, &global_game, list){
+		pr_info("pid = game :%jd | process: %jd\n", (intmax_t) game->id, (intmax_t) uid);
+		if(uid_eq(game->id, uid)){
+			return game;
+		}
 	}
-	return global_game;
+
+	game = kmalloc(sizeof(*game), GFP_KERNEL);
+	if(!game)
+		return -ENOMEM;
+	game->id = uid;
+	game->user_view = vmalloc(PAGE_SIZE);
+	list_add(&game->list, &todo_list);
+	return 0;
+
 }
 
 static void mm_free_games(void){
