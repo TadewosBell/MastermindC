@@ -422,6 +422,12 @@ static struct miscdevice mm_ctl_dev = {
 	.fops = &mm_ctl_fops,
 	.mode = 0666,
 };
+
+static irqreturn_t validate_packet(void *cookie){
+	pr_info("This is validate data");
+	return IRQ_WAKE_THREAD;
+}
+
 /**
  * cs421net_top() - top-half of CS421Net ISR
  * @irq: IRQ that was invoked (ignored)
@@ -439,8 +445,10 @@ static irqreturn_t cs421net_top(int irq, void *cookie)
 	if(irq != 6){
 		return IRQ_NONE;
 	}
+	ret = validate_packet(cookie);
+
 	pr_info("This is top half");
-	return IRQ_HANDLED;
+	return ret;
 }
 
 /**
