@@ -106,7 +106,7 @@ static struct mm_game *mm_find_game(kuid_t uid){
 	game->id = uid;
 	game->user_view = vmalloc(PAGE_SIZE);
 	list_add(&game->list, &global_game);
-	return 0;
+	return game;
 
 }
 
