@@ -148,8 +148,6 @@ int main(void) {
         printf("SUDO Test 10 passed: You set the color with the correct priveledge\n");
     }
     
-    //I set two different ids to start two active games
-    mmDesc = open("/sys/devices/platform/mastermind/stats", O_RDONLY);
     retVal = write(fileDesc, "start", 5);
     retVal = setuid(1000);
     retVal = write(fileDesc, "start",5);
