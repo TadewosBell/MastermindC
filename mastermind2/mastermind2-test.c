@@ -139,21 +139,28 @@ int main(void) {
     sscanf(readBuff, "CS421 Mastermind Stats\nNumber of colors: %d\nNumber of Active Games: %d\nNumber of Games: %d\nNumber of times code was changed: %d\nNumber of invalid code change attempts: %d\n",&numColors, &activegames, &games, &codeChanges, &attempts);
 
     if(codeChanges == 1){
-        printf("Test 8: passed, you ran this code with executive permission and have changed the color\n");
+        printf("Test 8: passed, you have changed the color\n");
     }
     
-    cs421net_send("444A", 4);
-    sscanf(readBuff,"CS421 Mastermind Stats\nNumber of colors: %d\nNumber of Active Games: %d\nNumber of Games: %d\nNumber of times code was changed: %d\nNumber of invalid code change attempts: %d\n",&numColors, &activegames, &games, &codeChanges, &attempts);
-
-    if(attempts == 1){
-        printf("Test 8: passed, I can see you did not run this file with root privileges\n");
+    fileDesc = open("/dev/mm_ctl", O_RDWR);
+    retVal = write(fileDesc, "color 1", 7);
+    if(retVal == 13){
+        printf("Test 9 passed: You tried to set color with out the right priviledges\n");
     }
 
-    printf("number of colors: %d\n",numColors);
-    printf("attemps: %d\n",attempts);
-    close(mmDesc);
+    close(fileDesc);
 
-	munmap(dest, PAGE_SIZE);
+    fileDesc = open("/dev/mm_ctl", O_RDWR);
+    retVal = write(fileDesc, "color 8", 7);
+
+    sscanf(readBuff, "CS421 Mastermind Stats\nNumber of colors: %d\nNumber of Active Games: %d\nNumber of Games: %d\nNumber of times code was changed: %d\nNumber of invalid code change attempts: %d\n",&numColors, &activegames, &games, &codeChanges, &attempts);
+
+    if(retval != 13 && numColors == 8){
+        printf("SUDO Test 10 passed: You set the color with the correct priveledge\n");
+    }
+    close(fileDesc);
+	
+    munmap(dest, PAGE_SIZE);
     
 
 	return 0;
