@@ -8,11 +8,6 @@
    http://man7.org/linux/man-pages/man3/errno.3.html
    https://www.avrfreaks.net/forum/convert-int-char-0
    https://www.csee.umbc.edu/~jtang/cs421.f19/homework/hw4/hw4_test.c
-   https://elixir.bootlin.com/linux/v5.2/source/arch/arm/mach-footbridge/ebsa285.c
-   https://www.fsl.cs.sunysb.edu/kernel-api/re667.html
-   https://www.kernel.org/doc/htmldocs/kernel-api/API-scnprintf.html
-   https://askubuntu.com/questions/222984/can-i-log-in-with-other-users-account
-   https://linuxconfig.org/add-user-on-ubuntu-18-04-bionic-beaver-linux
  */
 #include "cs421net.h"
 #include <fcntl.h>
@@ -125,19 +120,30 @@ int main(void) {
 	if(strcmp(readBuff, "B1W2") == 0){
 		printf("correct amount of char (4) was read and not more, Test 7 passed\n");
 	}
-    close(mmDesc);
+
+	close(mmDesc);
+    //sending new color code to increment number of changes
+    cs421net_send("4442", 4);
+
+
+
+    int numColors,activegames,games,codeChanges,attempts;
     uid_t userId, effId;
     userId = getuid();
     effId = geteuid();
     printf("user Id of the calling process %ld\n effective id %ld\n", (long)userId, (long)effId);
+    sscanf(readBuff, "CS421 Mastermind Stats\nNumber of colors: %d\nNumber of Active Games: %d\nNumber of Games: %d\nNumber of times code was changed: %d\nNumber of invalid code change attempts: %d\n",&numColors, &activegames, &games, &codeChanges, &attempts);
 
-    
+    if(codeChanges == 1){
+        printf("Test 9: passed, you have changed the color code by signaling an interrupt\n");
+    }
+    close(mmDesc);
     fileDesc = open("/dev/mm_ctl", O_RDWR);
     retVal = write(fileDesc, "colors 1", 8);
     if(errno == 13){
-        printf("Test 8 passed: You tried to set color with out the right priviledges\n");
+        printf("Test 10 passed: You tried to set color with out the right priviledges\n");
     }else if(errno == 22){
-        printf("SUDO Test 9 passed: tried to set invalid number\n");
+        printf("SUDO Test 11 passed: tried to set invalid number\n");
     }
     close(fileDesc);
 
@@ -145,27 +151,22 @@ int main(void) {
     retVal = write(fileDesc, "colors 8", 8);
 
     if(errno != 13){
-        printf("SUDO Test 10 passed: You set the color with the correct priveledge\n");
+        printf("SUDO Test 12 passed: You set the color with the correct priveledge\n");
     }
-    
+    mmDesc = open("/sys/devices/platform/mastermind/stats", O_RDONLY);
     retVal = write(fileDesc, "start", 5);
     retVal = setuid(1000);
     retVal = write(fileDesc, "start",5);
     
     mmDesc = open("/sys/devices/platform/mastermind/stats", O_RDONLY);
 
-    close(mmDesc);
-    //sending new color code to increment number of changes
-    cs421net_send("4442", 4);
-
     retVal = read(mmDesc, readBuff, 300);
 	readBuff[300] = '\0';
     printf("%s \n", readBuff);
-    strCmpVal = strcmp(readBuff, "CS421 Mastermind Stats\nNumber of colors: 8\nNumber of Active Games: 2\nNumber of Games: 2\nNumber of times code was changed: 1\nNumber of invalid code change attempts: 0\n");
+    strCmpVal = strcmp(readBuff, "CS421 Mastermind Stats\nNumber of colors: 8\nNumber of Active Games: 2\nNumber of Games: 2\nNumber of times code was changed: 2\nNumber of invalid code change attempts: 0\n");
     printf("string compare %d\n", strCmpVal);
     if(strCmpVal == 0){
-        printf("Test 11: passed, you have changed the color code by signaling an interrupt\n");
-        printf("SUDO Test 12 passed: color code changed one time.\n");
+        printf("Test 8 passed: color code changed one time.\n");
         printf("SUDO Test 13 passed: two games started, with two uids 0 and 1000\n");
     }
 
