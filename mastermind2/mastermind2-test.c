@@ -30,7 +30,7 @@ int main(void) {
 	int fd, retVal;
 	int fileDesc, mmDesc;
 	void *dest;
-	char readBuff[1000];
+	char readBuff[PAGE_SIZE];
 
 	fd = open("/dev/mm",O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
 
@@ -128,8 +128,8 @@ int main(void) {
     mmDesc = open("/sys/devices/platform/mastermind/stats", O_RDONLY);
 
 	
-	retVal = read(mmDesc, readBuff, 900);
-	readBuff[900] = '\0';
+	retVal = read(mmDesc, readBuff, 300);
+	readBuff[300] = '\0';
     printf("%s \n", readBuff);
     strCmpVal = strcmp(readBuff, "CS421 Mastermind Stats\nNumber of colors: 6\nNumber of Active Games: 1\nNumber of Games: 1\nNumber of times code was changed: 1\nNumber of invalid code change attempts: 0\n");
     printf("string compare %d\n", strCmpVal);
@@ -168,7 +168,8 @@ int main(void) {
     retVal = write(fileDesc, "start", 5);
     retVal = setuid(1000);
     retVal = write(fileDesc, "start",5);
-
+    retVal = read(mmDesc, readBuff, 300);
+	readBuff[300] = '\0';
     printf("%s \n", readBuff);
     strCmpVal = strcmp(readBuff, "CS421 Mastermind Stats\nNumber of colors: 8\nNumber of Active Games: 2\nNumber of Games: 2\nNumber of times code was changed: 2\nNumber of invalid code change attempts: 0\n");
     printf("string compare %d\n", strCmpVal);
