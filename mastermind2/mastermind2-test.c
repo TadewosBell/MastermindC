@@ -132,7 +132,7 @@ int main(void) {
     printf("%c \n", readBuff[67]);
     int numColors,activegames,games,codeChanges,attempts;
 
-    sscanf(readBuff, "%s %d %s %d %s %d %s %d %s %d",&numColors, &activegames, &games, &codeChanges, &attempts);
+    sscanf(readBuff, "CS421 Mastermind Stats\nNumber of colors: %d\nNumber of Active Games: %d\nNumber of Games: %d\nNumber of times code was changed: %d\nNumber of invalid code change attempts: %d\n",&numColors, &activegames, &games, &codeChanges, &attempts);
 
     printf("number of colors: %d\n",numColors);
     close(mmDesc);
