@@ -164,7 +164,7 @@ int main(void) {
     if(errno != 13){
         printf("SUDO Test 12 passed: You set the color with the correct priveledge\n");
     }
-    mmDesc = open("/dev/mm", O_RDONLY);
+    mmDesc = open("/sys/devices/platform/mastermind/stats", O_RDONLY);
     retVal = write(fileDesc, "start", 5);
     retVal = setuid(1000);
     retVal = write(fileDesc, "start",5);
