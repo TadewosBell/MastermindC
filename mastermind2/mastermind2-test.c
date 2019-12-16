@@ -31,7 +31,7 @@ int main(void) {
 	int fd, retVal;
 	int fileDesc, mmDesc;
 	void *dest;
-	char readBuff[100];
+	char readBuff[1000];
 
 	fd = open("/dev/mm",O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
 
@@ -126,11 +126,11 @@ int main(void) {
     mmDesc = open("/sys/devices/platform/mastermind/stats", O_RDONLY);
 
 	
-	retVal = read(mmDesc, readBuff, 30);
-	readBuff[30] = '\0';
+	retVal = read(mmDesc, readBuff, 200);
+	readBuff[200] = '\0';
     printf("%s \n", readBuff);
     close(mmDesc);
-    
+
 	munmap(dest, PAGE_SIZE);
     
 
