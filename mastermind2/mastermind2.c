@@ -91,7 +91,7 @@ static DEFINE_SPINLOCK(dev_lock);
 
 static struct mm_game *mm_find_game(kuid_t uid){
 
-	struct mm_game *game, *ret;
+	struct mm_game *game;
 	
 	list_for_each_entry(game, &global_game, list){
 		pr_info("in list iterating");
@@ -513,10 +513,13 @@ int validate_data(char *data){
 
 int set_code(char *data){
 	int i;
-	kuid_t userID = current_uid();
-	struct mm_game *game = mm_find_game(userID);
-	for(i = 0; i < 4; i++){
-		game->target_code[i] = charToInt(data[i]);
+	struct mm_game *game;
+	
+	list_for_each_entry(game, &global_game, list){
+		pr_info("in list iterating");
+		for(i = 0; i < 4; i++){
+			game->target_code[i] = charToInt(data[i]);
+		}
 	}
 	return 1;
 }
@@ -606,7 +609,16 @@ size_t stat_write = 0;
 static ssize_t mm_stats_show(struct device *dev,
 			     struct device_attribute *attr, char *buf)
 {
+	
     spin_lock(&dev_lock);
+	num_games = 0;
+	num_games_started = 0;
+	list_for_each_entry(game, &global_game, list){
+		if(game->game_active == true){
+			num_games += 1;
+		}
+		num_games_started +=1;
+	}
     stat_write += scnprintf(buf + stat_write,PAGE_SIZE - stat_write,"CS421 Mastermind Stats\nNumber of colors: %d\nNumber of Active Games: %d\nNumber of Active Games: %d\nNumber of times code was changed: %d\nNumber of invalid code change attempts: %d\n", num_colors, num_games,num_games_started,num_changes,num_invalid_changes);
 	spin_unlock(&dev_lock);
     return stat_write;
