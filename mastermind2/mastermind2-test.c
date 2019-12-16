@@ -121,11 +121,6 @@ int main(void) {
 		printf("correct amount of char (4) was read and not more, Test 7 passed\n");
 	}
 
-	close(mmDesc);
-    //sending new color code to increment number of changes
-    cs421net_send("4442", 4);
-
-
 
     int numColors,activegames,games,codeChanges,attempts;
     uid_t userId, effId;
@@ -134,16 +129,12 @@ int main(void) {
     printf("user Id of the calling process %ld\n effective id %ld\n", (long)userId, (long)effId);
     sscanf(readBuff, "CS421 Mastermind Stats\nNumber of colors: %d\nNumber of Active Games: %d\nNumber of Games: %d\nNumber of times code was changed: %d\nNumber of invalid code change attempts: %d\n",&numColors, &activegames, &games, &codeChanges, &attempts);
 
-    if(codeChanges == 1){
-        printf("Test 9: passed, you have changed the color code by signaling an interrupt\n");
-    }
-
     fileDesc = open("/dev/mm_ctl", O_RDWR);
     retVal = write(fileDesc, "colors 1", 8);
     if(errno == 13){
-        printf("Test 10 passed: You tried to set color with out the right priviledges\n");
+        printf("Test 8 passed: You tried to set color with out the right priviledges\n");
     }else if(errno == 22){
-        printf("SUDO Test 11 passed: tried to set invalid number\n");
+        printf("SUDO Test 9 passed: tried to set invalid number\n");
     }
     close(fileDesc);
 
@@ -151,7 +142,7 @@ int main(void) {
     retVal = write(fileDesc, "colors 8", 8);
 
     if(errno != 13){
-        printf("SUDO Test 12 passed: You set the color with the correct priveledge\n");
+        printf("SUDO Test 10 passed: You set the color with the correct priveledge\n");
     }
     mmDesc = open("/sys/devices/platform/mastermind/stats", O_RDONLY);
     retVal = write(fileDesc, "start", 5);
@@ -160,13 +151,18 @@ int main(void) {
     
     mmDesc = open("/sys/devices/platform/mastermind/stats", O_RDONLY);
 
+    close(mmDesc);
+    //sending new color code to increment number of changes
+    cs421net_send("4442", 4);
+
     retVal = read(mmDesc, readBuff, 300);
 	readBuff[300] = '\0';
     printf("%s \n", readBuff);
     strCmpVal = strcmp(readBuff, "CS421 Mastermind Stats\nNumber of colors: 8\nNumber of Active Games: 2\nNumber of Games: 2\nNumber of times code was changed: 1\nNumber of invalid code change attempts: 0\n");
     printf("string compare %d\n", strCmpVal);
     if(strCmpVal == 0){
-        printf("SUDO Test 8 passed: color code changed one time.\n");
+        printf("Test 11: passed, you have changed the color code by signaling an interrupt\n");
+        printf("SUDO Test 12 passed: color code changed one time.\n");
         printf("SUDO Test 13 passed: two games started, with two uids 0 and 1000\n");
     }
 

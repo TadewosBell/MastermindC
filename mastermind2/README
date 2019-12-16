@@ -1,0 +1,10 @@
+AFTER A Fresh installation and inserting the module.
+
+
+Run sudo ./mastermind2-test
+
+then remove the module
+
+Run ./mastermind2-test 
+
+this will show test 8 improper credentials.
