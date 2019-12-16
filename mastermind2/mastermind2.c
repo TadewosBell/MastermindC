@@ -611,6 +611,8 @@ static ssize_t mm_stats_show(struct device *dev,
 {
 	
     spin_lock(&dev_lock);
+	kuid_t userID = current_uid();
+	struct mm_game *game;
 	num_games = 0;
 	num_games_started = 0;
 	list_for_each_entry(game, &global_game, list){
@@ -642,10 +644,6 @@ static int mastermind_probe(struct platform_device *pdev)
 	kuid_t userID = current_uid();
 	struct mm_game *game;
 	game = mm_find_game(userID);
-	// if (!global_game->user_view) {
-	// 	pr_err("Could not allocate memory\n");
-	// 	return -ENOMEM;
-	// }
 
 	/* YOUR CODE HERE */
 	retval = misc_register(&mm_dev);
