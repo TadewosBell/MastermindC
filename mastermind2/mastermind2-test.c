@@ -156,7 +156,7 @@ int main(void) {
 
     sscanf(readBuff, "CS421 Mastermind Stats\nNumber of colors: %d\nNumber of Active Games: %d\nNumber of Games: %d\nNumber of times code was changed: %d\nNumber of invalid code change attempts: %d\n",&numColors, &activegames, &games, &codeChanges, &attempts);
 
-    if(retval != 13 && numColors == 8){
+    if(retVal != 13 && numColors == 8){
         printf("SUDO Test 11 passed: You set the color with the correct priveledge\n");
     }
     close(fileDesc);
