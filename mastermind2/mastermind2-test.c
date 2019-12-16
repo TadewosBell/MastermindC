@@ -128,8 +128,8 @@ int main(void) {
     mmDesc = open("/sys/devices/platform/mastermind/stats", O_RDONLY);
 
 	
-	retVal = read(mmDesc, readBuff, 1000);
-	readBuff[1000] = '\0';
+	retVal = read(mmDesc, readBuff, 900);
+	readBuff[900] = '\0';
     printf("%s \n", readBuff);
     strCmpVal = strcmp(readBuff, "CS421 Mastermind Stats\nNumber of colors: 6\nNumber of Active Games: 1\nNumber of Games: 1\nNumber of times code was changed: 1\nNumber of invalid code change attempts: 0\n");
     prinf("string compare %d\n", strCmpVal);
