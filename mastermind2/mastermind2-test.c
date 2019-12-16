@@ -137,7 +137,7 @@ int main(void) {
     if(codeChanges == 1){
         printf("Test 9: passed, you have changed the color code by signaling an interrupt\n");
     }
-    
+
     fileDesc = open("/dev/mm_ctl", O_RDWR);
     retVal = write(fileDesc, "colors 1", 8);
     if(errno == 13){
@@ -163,7 +163,7 @@ int main(void) {
     retVal = read(mmDesc, readBuff, 300);
 	readBuff[300] = '\0';
     printf("%s \n", readBuff);
-    strCmpVal = strcmp(readBuff, "CS421 Mastermind Stats\nNumber of colors: 8\nNumber of Active Games: 2\nNumber of Games: 2\nNumber of times code was changed: 2\nNumber of invalid code change attempts: 0\n");
+    strCmpVal = strcmp(readBuff, "CS421 Mastermind Stats\nNumber of colors: 8\nNumber of Active Games: 2\nNumber of Games: 2\nNumber of times code was changed: 1\nNumber of invalid code change attempts: 0\n");
     printf("string compare %d\n", strCmpVal);
     if(strCmpVal == 0){
         printf("SUDO Test 8 passed: color code changed one time.\n");
