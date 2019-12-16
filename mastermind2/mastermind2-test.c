@@ -131,7 +131,6 @@ int main(void) {
     cs421net_send("4442", 4);
 
 	
-    printf("%c \n", readBuff[67]);
     int numColors,activegames,games,codeChanges,attempts;
     uid_t userId, effId;
     userId = getuid();
