@@ -148,7 +148,7 @@ int main(void) {
     if(codeChanges == 1){
         printf("Test 9: passed, you have changed the color code by signaling an interrupt\n");
     }
-    
+    close(mmDesc);
     fileDesc = open("/dev/mm_ctl", O_RDWR);
     retVal = write(fileDesc, "colors 1", 8);
     if(errno == 13){
@@ -164,7 +164,7 @@ int main(void) {
     if(errno != 13){
         printf("SUDO Test 12 passed: You set the color with the correct priveledge\n");
     }
-
+    mmDesc = open("/dev/mm", O_RDONLY);
     retVal = write(fileDesc, "start", 5);
     retVal = setuid(1000);
     retVal = write(fileDesc, "start",5);
