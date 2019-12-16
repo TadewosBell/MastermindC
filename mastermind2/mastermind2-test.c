@@ -130,8 +130,9 @@ int main(void) {
 	retVal = read(mmDesc, readBuff, 177);
 	readBuff[177] = '\0';
     printf("%c \n", readBuff[67]);
-    int numColors;
-    sscanf(readBuff, "%*s %d",&numColors);
+    int numColors,activegames,games,codeChanges,attempts;
+
+    sscanf(readBuff, "%s %d %s %d %s %d %s %d %s %d",&numColors, &activegames, &games, &codeChanges, &attempts);
 
     printf("number of colors: %d\n",numColors);
     close(mmDesc);
