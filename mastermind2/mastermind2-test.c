@@ -137,7 +137,7 @@ int main(void) {
     if(codeChanges == 1){
         printf("Test 9: passed, you have changed the color code by signaling an interrupt\n");
     }
-    close(mmDesc);
+    
     fileDesc = open("/dev/mm_ctl", O_RDWR);
     retVal = write(fileDesc, "colors 1", 8);
     if(errno == 13){
