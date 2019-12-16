@@ -96,8 +96,7 @@ static struct mm_game *mm_find_game(kuid_t uid){
 	list_for_each_entry(game, &global_game, list){
 		pr_info("in list iterating");
 		if(uid_eq(game->id, uid)){
-			ret = container_of(game->list,struct mm_game,list);
-			return ret;
+			return game;
 		}
 	}
 
