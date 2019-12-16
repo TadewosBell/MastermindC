@@ -107,7 +107,7 @@ static struct mm_game *mm_find_game(kuid_t uid){
 
 	game = kmalloc(sizeof(*game), GFP_KERNEL);
 	if(!game)
-		return -ENOMEM;
+		return (void *)-ENOMEM;
 	game->id = uid;
 	game->user_view = vmalloc(PAGE_SIZE);
 	list_add(&game->list, &global_game);
@@ -344,12 +344,13 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 static int mm_mmap(struct file *filp, struct vm_area_struct *vma)
 {   
 	unsigned long size = (unsigned long)(vma->vm_end - vma->vm_start);
+	unsigned long page;
 	kuid_t userID = (kuid_t)current_uid();
 	struct mm_game *game = mm_find_game(userID);
 
 	//spin lock to protect userview when set
 	spin_lock(&dev_lock);
-	unsigned long page = vmalloc_to_pfn(game->user_view);
+	page = vmalloc_to_pfn(game->user_view);
 	spin_unlock(&dev_lock);
 	//return IO error if size is greater than PageSize
 	if (size > PAGE_SIZE){
@@ -564,9 +565,6 @@ int set_code(char *data){
  */
 static irqreturn_t cs421net_bottom(int irq, void *cookie)
 {
-	/* Part 4: YOUR CODE HERE */
-
-	pr_info("This is bottom half\n");
 	int ret;
 	long unsigned int data_size = 4;
 	long unsigned int * const dataSize = &data_size;
@@ -619,9 +617,8 @@ static ssize_t mm_stats_show(struct device *dev,
 			     struct device_attribute *attr, char *buf)
 {
 	//lock threads to not allow new games to start while stats being calculated
-    spin_lock(&dev_lock);
-	kuid_t userID = (kuid_t)current_uid();
 	struct mm_game *game;
+    spin_lock(&dev_lock);
 	//set the number of games counter to 0 before counting
 	num_games = 0;
 	num_games_started = 0;
