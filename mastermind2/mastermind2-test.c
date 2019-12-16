@@ -143,7 +143,7 @@ int main(void) {
     }
     
     fileDesc = open("/dev/mm_ctl", O_RDWR);
-    retVal = write(fileDesc, "color 1", 7);
+    retVal = write(fileDesc, "colors 1", 8);
     if(retVal == 13){
         printf("Test 9 passed: You tried to set color with out the right priviledges\n");
     }else if(retVal == 22){
@@ -152,7 +152,7 @@ int main(void) {
     close(fileDesc);
 
     fileDesc = open("/dev/mm_ctl", O_RDWR);
-    retVal = write(fileDesc, "color 8", 7);
+    retVal = write(fileDesc, "colors 8", 8);
 
     sscanf(readBuff, "CS421 Mastermind Stats\nNumber of colors: %d\nNumber of Active Games: %d\nNumber of Games: %d\nNumber of times code was changed: %d\nNumber of invalid code change attempts: %d\n",&numColors, &activegames, &games, &codeChanges, &attempts);
 
