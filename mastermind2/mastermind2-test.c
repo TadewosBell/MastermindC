@@ -158,8 +158,8 @@ int main(void) {
 
     retVal = write(fileDesc, "start", 5);
     retVal = setuid(1000);
-    retval = write(fileDesc, "start",5);
-    if(retval == 0){
+    retVal = write(fileDesc, "start",5);
+    if(retVal == 0){
         munmap(dest, PAGE_SIZE);
         return 0;
     }
