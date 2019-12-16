@@ -129,7 +129,7 @@ int main(void) {
 	
 	retVal = read(mmDesc, readBuff, 177);
 	readBuff[177] = '\0';
-    printf("%s \n", readBuff);
+    printf("%c \n", readBuff[44]);
     close(mmDesc);
 
 	munmap(dest, PAGE_SIZE);
