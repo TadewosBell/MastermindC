@@ -268,7 +268,7 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 	char blackPeg, whitePeg;
 	char targetBuf[NUM_PEGS];
 	int guess[NUM_PEGS];
-	kuid_t userID = current_uid();
+	kuid_t userID = (kuid_t)current_uid();
 	struct mm_game *game = mm_find_game(userID);
     
 	if (game->game_active == false || count < NUM_PEGS) {
@@ -344,7 +344,7 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
 static int mm_mmap(struct file *filp, struct vm_area_struct *vma)
 {   
 	unsigned long size = (unsigned long)(vma->vm_end - vma->vm_start);
-	kuid_t userID = current_uid();
+	kuid_t userID = (kuid_t)current_uid();
 	struct mm_game *game = mm_find_game(userID);
 
 	//spin lock to protect userview when set
@@ -395,7 +395,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 	char targetBuf[8];
     int colorChoice;
 	size_t copyLn = 8;
-	kuid_t userID = current_uid();
+	kuid_t userID = (kuid_t)current_uid();
 	struct mm_game *game = mm_find_game(userID);
 	
 	pr_info("mm_ctl_write all variables intialized and started\n");
@@ -620,7 +620,7 @@ static ssize_t mm_stats_show(struct device *dev,
 {
 	//lock threads to not allow new games to start while stats being calculated
     spin_lock(&dev_lock);
-	kuid_t userID = current_uid();
+	kuid_t userID = (kuid_t)current_uid();
 	struct mm_game *game;
 	//set the number of games counter to 0 before counting
 	num_games = 0;
