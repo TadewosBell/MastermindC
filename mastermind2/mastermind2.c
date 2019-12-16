@@ -64,6 +64,8 @@ struct mm_game
 	/** buffer that records all of user's guesses and their results */
 	char *user_view;
 
+	size_t scnWrite = 0;
+
 	kuid_t id;
 };
 
@@ -72,8 +74,6 @@ static LIST_HEAD(global_game);
 static int num_games = 0;
 
 static int num_games_started = 0;
-
-size_t scnWrite = 0;
 
 unsigned long flags;
 
@@ -304,14 +304,15 @@ static ssize_t mm_write(struct file *filp, const char __user * ubuf,
     spin_lock(&dev_lock);
 	game->last_result[1] = blackPeg;
 	game->last_result[3] = whitePeg;
-	scnWrite +=
-	    scnprintf(game->user_view + scnWrite, PAGE_SIZE - scnWrite,
+	//increment the nuber of bytes used in userview
+	game->scnWrite +=
+	    scnprintf(game->user_view + game->scnWrite, PAGE_SIZE - game->scnWrite,
 		      "Guess %d: %c%c%c%c | %c%c%c%c \n", game->num_guesses,
 		      targetBuf[0], targetBuf[1], targetBuf[2], targetBuf[3],
 		      game->last_result[0], game->last_result[1], game->last_result[2],
 		      game->last_result[3]);
     if(charToInt(blackPeg) == 4){
-        scnWrite += scnprintf(game->user_view + scnWrite,PAGE_SIZE - scnWrite,"You Won the game! \n");
+        game->scnWrite += scnprintf(game->user_view + game->scnWrite,PAGE_SIZE - game->scnWrite,"You Won the game! \n");
         game->game_active = false;
     }
     spin_unlock(&dev_lock);
@@ -340,9 +341,12 @@ static int mm_mmap(struct file *filp, struct vm_area_struct *vma)
 	unsigned long size = (unsigned long)(vma->vm_end - vma->vm_start);
 	kuid_t userID = current_uid();
 	struct mm_game *game = mm_find_game(userID);
+
+	//spin lock to protect userview when set
 	spin_lock(&dev_lock);
 	unsigned long page = vmalloc_to_pfn(game->user_view);
 	spin_unlock(&dev_lock);
+	//return IO error if size is greater than PageSize
 	if (size > PAGE_SIZE){
 		return -EIO;
     }
@@ -408,7 +412,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 		game->target_code[2] = 1;
 		game->target_code[3] = 1;
 		pr_info("start\n");
-		scnWrite = 0;
+		game->scnWrite = 0;
 		//set number of guesses to 0
 		game->num_guesses = 0;
 		//set the user buffer to null
@@ -516,7 +520,6 @@ int set_code(char *data){
 	struct mm_game *game;
 	
 	list_for_each_entry(game, &global_game, list){
-		pr_info("in list iterating");
 		for(i = 0; i < 4; i++){
 			game->target_code[i] = charToInt(data[i]);
 		}
@@ -609,16 +612,20 @@ size_t stat_write = 0;
 static ssize_t mm_stats_show(struct device *dev,
 			     struct device_attribute *attr, char *buf)
 {
-	
+	//lock threads to not allow new games to start while stats being calculated
     spin_lock(&dev_lock);
 	kuid_t userID = current_uid();
 	struct mm_game *game;
+	//set the number of games counter to 0 before counting
 	num_games = 0;
 	num_games_started = 0;
+	//iterate trhough list of existing games and get number of games
 	list_for_each_entry(game, &global_game, list){
 		if(game->game_active == true){
+			//if game is active increment number of active games counter
 			num_games += 1;
 		}
+		//count the total number of games
 		num_games_started +=1;
 	}
     stat_write += scnprintf(buf + stat_write,PAGE_SIZE - stat_write,"CS421 Mastermind Stats\nNumber of colors: %d\nNumber of Active Games: %d\nNumber of Games: %d\nNumber of times code was changed: %d\nNumber of invalid code change attempts: %d\n", num_colors, num_games,num_games_started,num_changes,num_invalid_changes);

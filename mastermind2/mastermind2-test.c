@@ -111,7 +111,7 @@ int main(void) {
 	close(mmDesc);
 
 
-	printf("Test 7: Test if i can read bast last_result\n");
+	printf("Test 7: Test if i can read past last_result\n");
 	mmDesc = open("/dev/mm", O_RDONLY);
 
 	
@@ -123,8 +123,16 @@ int main(void) {
 	}
 
 	close(mmDesc);
+    mmDesc = open("/sys/devices/platform/mastermind/stats", O_RDONLY);
 
+	
+	retVal = read(mmDesc, readBuff, 30);
+	readBuff[30] = '\0';
+    printf("%s \n", readBuff);
+    close(mmDesc);
+    
 	munmap(dest, PAGE_SIZE);
+    
 
 	return 0;
 }
