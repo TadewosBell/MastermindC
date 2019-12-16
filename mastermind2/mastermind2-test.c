@@ -8,6 +8,11 @@
    http://man7.org/linux/man-pages/man3/errno.3.html
    https://www.avrfreaks.net/forum/convert-int-char-0
    https://www.csee.umbc.edu/~jtang/cs421.f19/homework/hw4/hw4_test.c
+   https://elixir.bootlin.com/linux/v5.2/source/arch/arm/mach-footbridge/ebsa285.c
+   https://www.fsl.cs.sunysb.edu/kernel-api/re667.html
+   https://www.kernel.org/doc/htmldocs/kernel-api/API-scnprintf.html
+   https://askubuntu.com/questions/222984/can-i-log-in-with-other-users-account
+   https://linuxconfig.org/add-user-on-ubuntu-18-04-bionic-beaver-linux
  */
 #include "cs421net.h"
 #include <fcntl.h>
@@ -121,7 +126,6 @@ int main(void) {
 		printf("correct amount of char (4) was read and not more, Test 7 passed\n");
 	}
 
-
     int numColors,activegames,games,codeChanges,attempts;
     uid_t userId, effId;
     userId = getuid();
@@ -144,6 +148,8 @@ int main(void) {
     if(errno != 13){
         printf("SUDO Test 10 passed: You set the color with the correct priveledge\n");
     }
+    
+    //I set two different ids to start two active games
     mmDesc = open("/sys/devices/platform/mastermind/stats", O_RDONLY);
     retVal = write(fileDesc, "start", 5);
     retVal = setuid(1000);

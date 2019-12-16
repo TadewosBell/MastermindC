@@ -8,6 +8,11 @@
    http://man7.org/linux/man-pages/man3/errno.3.html
    https://www.avrfreaks.net/forum/convert-int-char-0
    https://www.csee.umbc.edu/~jtang/cs421.f19/homework/hw4/hw4_test.c
+   https://elixir.bootlin.com/linux/v5.2/source/arch/arm/mach-footbridge/ebsa285.c
+   https://www.fsl.cs.sunysb.edu/kernel-api/re667.html
+   https://www.kernel.org/doc/htmldocs/kernel-api/API-scnprintf.html
+   https://askubuntu.com/questions/222984/can-i-log-in-with-other-users-account
+   https://linuxconfig.org/add-user-on-ubuntu-18-04-bionic-beaver-linux
  */
 /*
  * This file uses kernel-doc style comments, which is similar to
@@ -428,6 +433,7 @@ static ssize_t mm_ctl_write(struct file *filp, const char __user * ubuf,
 	} else if (strncmp(targetBuf, quit, count) == 0) {
 
 		pr_info("in quit if\n");
+		//if quit I make game active false
         spin_lock(&dev_lock);
 		game->game_active = false;
         num_games -= 1;
@@ -628,6 +634,7 @@ static ssize_t mm_stats_show(struct device *dev,
 		//count the total number of games
 		num_games_started +=1;
 	}
+	//increment index variable to hold position
     stat_write += scnprintf(buf + stat_write,PAGE_SIZE - stat_write,"CS421 Mastermind Stats\nNumber of colors: %d\nNumber of Active Games: %d\nNumber of Games: %d\nNumber of times code was changed: %d\nNumber of invalid code change attempts: %d\n", num_colors, num_games,num_games_started,num_changes,num_invalid_changes);
 	spin_unlock(&dev_lock);
     return stat_write;
