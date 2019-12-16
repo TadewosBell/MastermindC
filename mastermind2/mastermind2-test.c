@@ -30,14 +30,16 @@ int main(void) {
     
 	/* YOUR CODE HERE */
 	printf("Unit tests!\n");
-	int fd, retVal;
+	int fd, retVal, stat;
 	int fileDesc, mmDesc;
 	void *dest;
 	char readBuff[1000];
 
 	fd = open("/dev/mm",O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+    stat = open("/sys/devices/platform/mastermind/stats",O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
 
 	dest = mmap(NULL, PAGE_SIZE,PROT_READ,MAP_SHARED,fd,0);
+    dest = mmap(NULL, PAGE_SIZE,PROT_READ,MAP_SHARED,stat,0);
 
 	if(dest == MAP_FAILED){
 		printf("failed memory map");
@@ -128,25 +130,21 @@ int main(void) {
     //sending new color code to increment number of changes
     cs421net_send("4442", 4);
 
-    mmDesc = open("/sys/devices/platform/mastermind/stats", O_RDONLY);
-
 	
-	retVal = read(mmDesc, readBuff, sizeof(statString));
-	readBuff[sizeof(statString)] = '\0';
     printf("%c \n", readBuff[67]);
     int numColors,activegames,games,codeChanges,attempts;
     uid_t userId, effId;
     userId = getuid();
     effId = geteuid();
     printf("user Id of the calling process %ld\n effective id %ld\n", (long)userId, (long)effId);
-    sscanf(readBuff, "CS421 Mastermind Stats\nNumber of colors: %d\nNumber of Active Games: %d\nNumber of Games: %d\nNumber of times code was changed: %d\nNumber of invalid code change attempts: %d\n",&numColors, &activegames, &games, &codeChanges, &attempts);
+    sscanf((char *)stat, "CS421 Mastermind Stats\nNumber of colors: %d\nNumber of Active Games: %d\nNumber of Games: %d\nNumber of times code was changed: %d\nNumber of invalid code change attempts: %d\n",&numColors, &activegames, &games, &codeChanges, &attempts);
 
     if(codeChanges == 1){
         printf("Test 8: passed, you ran this code with executive permission and have changed the color\n");
     }
     
     cs421net_send("444A", 4);
-    sscanf(readBuff,"CS421 Mastermind Stats\nNumber of colors: %d\nNumber of Active Games: %d\nNumber of Games: %d\nNumber of times code was changed: %d\nNumber of invalid code change attempts: %d\n",&numColors, &activegames, &games, &codeChanges, &attempts);
+    sscanf((char *)stat,"CS421 Mastermind Stats\nNumber of colors: %d\nNumber of Active Games: %d\nNumber of Games: %d\nNumber of times code was changed: %d\nNumber of invalid code change attempts: %d\n",&numColors, &activegames, &games, &codeChanges, &attempts);
 
     if(attempts == 1){
         printf("Test 8: passed, I can see you did not run this file with root privileges\n");
