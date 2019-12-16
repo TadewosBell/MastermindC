@@ -641,10 +641,6 @@ static int mastermind_probe(struct platform_device *pdev)
     int retval;
 	char cookie[4];
 	pr_info("Initializing the game.\n");
-	kuid_t userID = current_uid();
-	struct mm_game *game;
-	game = mm_find_game(userID);
-
 	/* YOUR CODE HERE */
 	retval = misc_register(&mm_dev);
 	if (retval < 0)
