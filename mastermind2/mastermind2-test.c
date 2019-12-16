@@ -144,9 +144,9 @@ int main(void) {
     
     fileDesc = open("/dev/mm_ctl", O_RDWR);
     retVal = write(fileDesc, "colors 1", 8);
-    if(retVal == 13){
+    if(errno == 13){
         printf("Test 9 passed: You tried to set color with out the right priviledges\n");
-    }else if(retVal == 22){
+    }else if(errno == 22){
         printf("SUDO Test 10 passed: tried to set invalid number\n");
     }
     close(fileDesc);
@@ -156,7 +156,7 @@ int main(void) {
 
     sscanf(readBuff, "CS421 Mastermind Stats\nNumber of colors: %d\nNumber of Active Games: %d\nNumber of Games: %d\nNumber of times code was changed: %d\nNumber of invalid code change attempts: %d\n",&numColors, &activegames, &games, &codeChanges, &attempts);
 
-    if(retVal != 13 && numColors == 8){
+    if(errno != 13){
         printf("SUDO Test 11 passed: You set the color with the correct priveledge\n");
     }
     close(fileDesc);
