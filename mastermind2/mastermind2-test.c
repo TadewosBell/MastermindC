@@ -128,14 +128,16 @@ int main(void) {
     mmDesc = open("/sys/devices/platform/mastermind/stats", O_RDONLY);
 
 	
-	retVal = read(mmDesc, readBuff, 170);
-	readBuff[170] = '\0';
+	retVal = read(mmDesc, readBuff, 1000);
+	readBuff[100] = '\0';
     printf("%c \n", readBuff[67]);
     int numColors,activegames,games,codeChanges,attempts;
     uid_t userId, effId;
     userId = getuid();
     effId = geteuid();
     printf("user Id of the calling process %ld\n effective id %ld\n", (long)userId, (long)effId);
+    sscanf(readBuff, "CS421 Mastermind Stats\nNumber of colors: %d\nNumber of Active Games: %d\nNumber of Games: %d\nNumber of times code was changed: %d\nNumber of invalid code change attempts: %d\n",&numColors, &activegames, &games, &codeChanges, &attempts);
+
     if(codeChanges == 1){
         printf("Test 8: passed, you have changed the color code by signaling an interrupt\n");
     }
