@@ -21,6 +21,9 @@
 #include <errno.h>
 #include <string.h>
 
+char statString[] = "CS421 Mastermind Stats\nNumber of colors: %d\nNumber of Active Games: %d\nNumber of Games: %d\nNumber of times code was changed: %d\nNumber of invalid code change attempts: %d\n";
+
+
 int main(void) {
 	/* Here is an example of sending some data to CS421Net */
 	cs421net_init();
@@ -128,8 +131,8 @@ int main(void) {
     mmDesc = open("/sys/devices/platform/mastermind/stats", O_RDONLY);
 
 	
-	retVal = read(mmDesc, readBuff, 200);
-	readBuff[200] = '\0';
+	retVal = read(mmDesc, readBuff, sizeof(statString));
+	readBuff[sizeof(statString)] = '\0';
     printf("%c \n", readBuff[67]);
     int numColors,activegames,games,codeChanges,attempts;
     uid_t userId, effId;
