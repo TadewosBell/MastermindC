@@ -125,14 +125,13 @@ int main(void) {
 	if(strcmp(readBuff, "B1W2") == 0){
 		printf("correct amount of char (4) was read and not more, Test 7 passed\n");
 	}
-
-    int numColors,activegames,games,codeChanges,attempts;
+    close(mmDesc);
     uid_t userId, effId;
     userId = getuid();
     effId = geteuid();
     printf("user Id of the calling process %ld\n effective id %ld\n", (long)userId, (long)effId);
-    sscanf(readBuff, "CS421 Mastermind Stats\nNumber of colors: %d\nNumber of Active Games: %d\nNumber of Games: %d\nNumber of times code was changed: %d\nNumber of invalid code change attempts: %d\n",&numColors, &activegames, &games, &codeChanges, &attempts);
 
+    
     fileDesc = open("/dev/mm_ctl", O_RDWR);
     retVal = write(fileDesc, "colors 1", 8);
     if(errno == 13){
