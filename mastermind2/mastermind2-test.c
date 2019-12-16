@@ -150,6 +150,7 @@ int main(void) {
     }
 
     printf("number of colors: %d\n",numColors);
+    printf("attemps: %d\n",attempts);
     close(mmDesc);
 
 	munmap(dest, PAGE_SIZE);
