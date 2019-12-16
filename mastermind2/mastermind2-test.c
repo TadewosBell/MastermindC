@@ -146,7 +146,7 @@ int main(void) {
     retVal = write(fileDesc, "color 1", 7);
     if(retVal == 13){
         printf("Test 9 passed: You tried to set color with out the right priviledges\n");
-    }else if(retval == 22){
+    }else if(retVal == 22){
         printf("SUDO Test 10 passed: tried to set invalid number\n");
     }
     close(fileDesc);
