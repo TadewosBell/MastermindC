@@ -125,18 +125,7 @@ int main(void) {
     //sending new color code to increment number of changes
     cs421net_send("4442", 4);
 
-    mmDesc = open("/sys/devices/platform/mastermind/stats", O_RDONLY);
 
-	
-	retVal = read(mmDesc, readBuff, 300);
-	readBuff[300] = '\0';
-    printf("%s \n", readBuff);
-    strCmpVal = strcmp(readBuff, "CS421 Mastermind Stats\nNumber of colors: 6\nNumber of Active Games: 1\nNumber of Games: 1\nNumber of times code was changed: 1\nNumber of invalid code change attempts: 0\n");
-    printf("string compare %d\n", strCmpVal);
-
-    if(strCmpVal == 0){
-        printf("Test 8 passed: color code changed one time.");
-    }
 
     int numColors,activegames,games,codeChanges,attempts;
     uid_t userId, effId;
@@ -168,12 +157,16 @@ int main(void) {
     retVal = write(fileDesc, "start", 5);
     retVal = setuid(1000);
     retVal = write(fileDesc, "start",5);
+    
+    mmDesc = open("/sys/devices/platform/mastermind/stats", O_RDONLY);
+
     retVal = read(mmDesc, readBuff, 300);
 	readBuff[300] = '\0';
     printf("%s \n", readBuff);
     strCmpVal = strcmp(readBuff, "CS421 Mastermind Stats\nNumber of colors: 8\nNumber of Active Games: 2\nNumber of Games: 2\nNumber of times code was changed: 2\nNumber of invalid code change attempts: 0\n");
     printf("string compare %d\n", strCmpVal);
     if(strCmpVal == 0){
+        printf("SUDO Test 8 passed: color code changed one time.\n");
         printf("SUDO Test 13 passed: two games started, with two uids 0 and 1000\n");
     }
 
