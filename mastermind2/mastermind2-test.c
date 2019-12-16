@@ -131,7 +131,7 @@ int main(void) {
 	readBuff[177] = '\0';
     printf("%c \n", readBuff[67]);
     int numColors;
-    sscanf(readBuff, '%*s %d',&numColors);
+    sscanf(readBuff, "%*s %d",&numColors);
 
     printf("number of colors: %d\n",numColors);
     close(mmDesc);
