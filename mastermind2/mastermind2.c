@@ -64,7 +64,7 @@ struct mm_game
 	/** buffer that records all of user's guesses and their results */
 	char *user_view;
 
-	size_t scnWrite = 0;
+	size_t scnWrite;
 
 	kuid_t id;
 };
