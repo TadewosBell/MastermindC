@@ -138,14 +138,16 @@ int main(void) {
     printf("user Id of the calling process %ld\n effective id %ld\n", (long)userId, (long)effId);
     sscanf(readBuff, "CS421 Mastermind Stats\nNumber of colors: %d\nNumber of Active Games: %d\nNumber of Games: %d\nNumber of times code was changed: %d\nNumber of invalid code change attempts: %d\n",&numColors, &activegames, &games, &codeChanges, &attempts);
 
-    if(attempts == 1){
-        printf("Test 8: passed, I can see you did not run this file with root privileges\n");
-    }
-
     if(codeChanges == 1){
         printf("Test 8: passed, you ran this code with executive permission and have changed the color\n");
     }
+    
+    cs421net_send("4442", 4);
+    sscanf(readBuff, "CS421 Mastermind Stats\nNumber of colors: %d\nNumber of Active Games: %d\nNumber of Games: %d\nNumber of times code was changed: %d\nNumber of invalid code change attempts: %d\n",&numColors, &activegames, &games, &codeChanges, &attempts);
 
+    if(attempts == 1){
+        printf("Test 8: passed, I can see you did not run this file with root privileges\n");
+    }
 
     printf("number of colors: %d\n",numColors);
     close(mmDesc);
