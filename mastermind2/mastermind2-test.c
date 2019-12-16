@@ -143,7 +143,7 @@ int main(void) {
     }
 
     if(codeChanges == 1){
-        printf("Test 8: passed, you ran this code with executive permission and have changed the color\n")l;
+        printf("Test 8: passed, you ran this code with executive permission and have changed the color\n");
     }
 
 
