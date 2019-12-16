@@ -133,6 +133,11 @@ int main(void) {
     printf("%s \n", readBuff);
     strCmpVal = strcmp(readBuff, "CS421 Mastermind Stats\nNumber of colors: 6\nNumber of Active Games: 1\nNumber of Games: 1\nNumber of times code was changed: 1\nNumber of invalid code change attempts: 0\n");
     printf("string compare %d\n", strCmpVal);
+
+    if(strCmpVal == 0){
+        printf("Test 8 passed: color code changed one time.");
+    }
+
     int numColors,activegames,games,codeChanges,attempts;
     uid_t userId, effId;
     userId = getuid();
@@ -141,15 +146,15 @@ int main(void) {
     sscanf(readBuff, "CS421 Mastermind Stats\nNumber of colors: %d\nNumber of Active Games: %d\nNumber of Games: %d\nNumber of times code was changed: %d\nNumber of invalid code change attempts: %d\n",&numColors, &activegames, &games, &codeChanges, &attempts);
 
     if(codeChanges == 1){
-        printf("Test 8: passed, you have changed the color code by signaling an interrupt\n");
+        printf("Test 9: passed, you have changed the color code by signaling an interrupt\n");
     }
     
     fileDesc = open("/dev/mm_ctl", O_RDWR);
     retVal = write(fileDesc, "colors 1", 8);
     if(errno == 13){
-        printf("Test 9 passed: You tried to set color with out the right priviledges\n");
+        printf("Test 10 passed: You tried to set color with out the right priviledges\n");
     }else if(errno == 22){
-        printf("SUDO Test 10 passed: tried to set invalid number\n");
+        printf("SUDO Test 11 passed: tried to set invalid number\n");
     }
     close(fileDesc);
 
@@ -157,18 +162,18 @@ int main(void) {
     retVal = write(fileDesc, "colors 8", 8);
 
     if(errno != 13){
-        printf("SUDO Test 11 passed: You set the color with the correct priveledge\n");
+        printf("SUDO Test 12 passed: You set the color with the correct priveledge\n");
     }
 
     retVal = write(fileDesc, "start", 5);
     retVal = setuid(1000);
     retVal = write(fileDesc, "start",5);
-    if(retVal == 0){
-        munmap(dest, PAGE_SIZE);
-        return 0;
-    }
-    if(activegames == 2){
-        printf("SUDO Test 12 passed: two games started, with two uids 0 and 1000\n");
+
+    printf("%s \n", readBuff);
+    strCmpVal = strcmp(readBuff, "CS421 Mastermind Stats\nNumber of colors: 6\nNumber of Active Games: 2\nNumber of Games: 2\nNumber of times code was changed: 1\nNumber of invalid code change attempts: 0\n");
+    printf("string compare %d\n", strCmpVal);
+    if(strCmpVal == 0){
+        printf("SUDO Test 13 passed: two games started, with two uids 0 and 1000\n");
     }
 
     close(fileDesc);
