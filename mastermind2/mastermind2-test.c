@@ -170,9 +170,10 @@ int main(void) {
     retVal = write(fileDesc, "start",5);
 
     printf("%s \n", readBuff);
-    strCmpVal = strcmp(readBuff, "CS421 Mastermind Stats\nNumber of colors: 6\nNumber of Active Games: 2\nNumber of Games: 2\nNumber of times code was changed: 1\nNumber of invalid code change attempts: 0\n");
+    strCmpVal = strcmp(readBuff, "CS421 Mastermind Stats\nNumber of colors: 8\nNumber of Active Games: 2\nNumber of Games: 2\nNumber of times code was changed: 2\nNumber of invalid code change attempts: 0\n");
     printf("string compare %d\n", strCmpVal);
-    if(strCmpVal == 0){
+    if(strCmpVal == 0+
+    ){
         printf("SUDO Test 13 passed: two games started, with two uids 0 and 1000\n");
     }
 
