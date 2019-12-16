@@ -132,7 +132,7 @@ int main(void) {
 	readBuff[900] = '\0';
     printf("%s \n", readBuff);
     strCmpVal = strcmp(readBuff, "CS421 Mastermind Stats\nNumber of colors: 6\nNumber of Active Games: 1\nNumber of Games: 1\nNumber of times code was changed: 1\nNumber of invalid code change attempts: 0\n");
-    prinf("string compare %d\n", strCmpVal);
+    printf("string compare %d\n", strCmpVal);
     int numColors,activegames,games,codeChanges,attempts;
     uid_t userId, effId;
     userId = getuid();
