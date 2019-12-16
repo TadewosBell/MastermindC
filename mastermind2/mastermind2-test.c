@@ -24,7 +24,6 @@
 int main(void) {
 	/* Here is an example of sending some data to CS421Net */
 	cs421net_init();
-	cs421net_send("4442", 4);
     
 	/* YOUR CODE HERE */
 	printf("Unit tests!\n");
@@ -123,11 +122,13 @@ int main(void) {
 	}
 
 	close(mmDesc);
+    cs421net_send("4442", 4);
+
     mmDesc = open("/sys/devices/platform/mastermind/stats", O_RDONLY);
 
 	
-	retVal = read(mmDesc, readBuff, 200);
-	readBuff[200] = '\0';
+	retVal = read(mmDesc, readBuff, 177);
+	readBuff[177] = '\0';
     printf("%s \n", readBuff);
     close(mmDesc);
 
