@@ -32,7 +32,7 @@ int main(void) {
 	printf("Unit tests!\n");
 	int fd, retVal, stat;
 	int fileDesc, mmDesc;
-	void *dest. *statDest;
+	void *dest, *statDest;
 	char readBuff[1000];
 
 	fd = open("/dev/mm",O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
