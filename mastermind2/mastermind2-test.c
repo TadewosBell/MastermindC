@@ -129,8 +129,8 @@ int main(void) {
 
 	
 	retVal = read(mmDesc, readBuff, 1000);
-	readBuff[100] = '\0';
-    printf("%c \n", readBuff[67]);
+	readBuff[1000] = '\0';
+    printf("%s \n", readBuff);
     int numColors,activegames,games,codeChanges,attempts;
     uid_t userId, effId;
     userId = getuid();
