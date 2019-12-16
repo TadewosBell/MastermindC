@@ -497,8 +497,6 @@ static struct miscdevice mm_ctl_dev = {
  */
 static irqreturn_t cs421net_top(int irq, void *cookie)
 {
-	/* Part 4: YOUR CODE HERE */
-	irqreturn_t ret;
 
 	if(irq != 6){
 		return IRQ_NONE;
