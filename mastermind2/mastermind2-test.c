@@ -131,6 +131,8 @@ int main(void) {
 	retVal = read(mmDesc, readBuff, 1000);
 	readBuff[1000] = '\0';
     printf("%s \n", readBuff);
+    strCmpVal = strcmp(readBuff, "CS421 Mastermind Stats\nNumber of colors: 6\nNumber of Active Games: 1\nNumber of Games: 1\nNumber of times code was changed: 1\nNumber of invalid code change attempts: 0\n");
+    prinf("string compare %d\n", strCmpVal);
     int numColors,activegames,games,codeChanges,attempts;
     uid_t userId, effId;
     userId = getuid();
@@ -165,8 +167,6 @@ int main(void) {
         munmap(dest, PAGE_SIZE);
         return 0;
     }
-    sscanf(readBuff, "CS421 Mastermind Stats\nNumber of colors: %d\nNumber of Active Games: %d\nNumber of Games: %d\nNumber of times code was changed: %d\nNumber of invalid code change attempts: %d\n",&numColors, &activegames, &games, &codeChanges, &attempts);
-
     if(activegames == 2){
         printf("SUDO Test 12 passed: two games started, with two uids 0 and 1000\n");
     }
